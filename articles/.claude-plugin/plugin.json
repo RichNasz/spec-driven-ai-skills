@@ -1,6 +1,6 @@
 {
   "name": "articles",
-  "version": "1.0.0",
+  "version": "1.0.0-beta",
   "description": "Spec-driven article generation — generate articles from Google Doc specs, evaluate spec quality with constraint saturation and semantic drift analysis, and auto-tune specs for the next iteration.",
   "author": {
     "name": "Richard Naszcyniec"

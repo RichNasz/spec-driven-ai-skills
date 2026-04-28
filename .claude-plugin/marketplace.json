@@ -5,14 +5,14 @@
   },
   "metadata": {
     "description": "Spec-Driven AI skills marketplace — Claude Code skill suites for spec-driven workflows",
-    "version": "1.0.0"
+    "version": "0.1.0"
   },
   "plugins": [
     {
       "name": "articles",
       "source": "./articles",
       "description": "Spec-driven article generation — generate articles from Google Doc specs, evaluate spec quality, and auto-tune specs for the next iteration",
-      "version": "1.0.0",
+      "version": "1.0.0-beta",
       "author": {
         "name": "Richard Naszcyniec"
       },

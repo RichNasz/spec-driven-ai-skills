@@ -27,7 +27,7 @@ Spec Doc ──/generate-article──▶ Article Doc
 
 Run the pipeline once to produce an article. Run it again to tighten the spec. Each cycle leaves a measurably better spec and a better article.
 
-For the technical and philosophical rationale behind this design, see [APPROACH.md](APPROACH.md).
+For the technical and philosophical rationale behind this design, see [APPROACH.md](../APPROACH.md). For the core concepts — constraint saturation, semantic drift, and the self-improving spec loop — see [docs/concepts.md](../docs/concepts.md).
 
 ## Prerequisites
 

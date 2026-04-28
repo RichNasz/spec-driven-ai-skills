@@ -11,6 +11,7 @@ Establish the identity and purpose of spec-driven-ai-skills through project-leve
 | `README.md` | Users and contributors | Entry point — what the project is, what categories exist, where to start |
 | `CLAUDE.md` | Claude Code | Project-level AI context — structure, conventions, navigation |
 | `APPROACH.md` | Anyone wanting deeper context | Philosophy and technical rationale behind spec-driven AI workflows |
+| `docs/concepts.md` | Users, contributors, and skill category authors | Definitions of the core concepts — constraint saturation, semantic drift, the self-improving spec loop, what makes this different |
 
 ## User Stories
 
@@ -23,6 +24,11 @@ Establish the identity and purpose of spec-driven-ai-skills through project-leve
 **As someone evaluating the approach**, I want APPROACH.md to explain the philosophical and technical foundations of spec-driven AI workflows, so I can assess whether the approach applies to my problem.
 
 ## Success Criteria
+
+### docs/concepts.md
+- A reader of any skill category's documentation can follow a link to concepts.md and understand what constraint saturation, semantic drift, and the self-improving loop mean without reading APPROACH.md in full.
+- Contains no skill-category-specific implementation details.
+- Does not duplicate the philosophical framing in APPROACH.md — it complements it with operational definitions.
 
 ### README.md
 - A reader unfamiliar with the project can identify the available skill categories in under 30 seconds.

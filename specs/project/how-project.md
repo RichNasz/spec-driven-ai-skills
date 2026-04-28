@@ -7,6 +7,20 @@
 - Root-level documents must not duplicate content in subdirectory documents. They orient and point; subdirectories explain.
 - LICENSE and CODE_OF_CONDUCT live at root and are not regenerated — they are edited directly.
 
+## docs/concepts.md
+
+**Structure**
+1. Constraint Saturation — the concept, the three verdicts (HEALTHY / TIGHT / OVER-DETERMINED), what each means for iteration
+2. Semantic Drift — the four mechanisms (primacy bias, recency bias, lost-in-the-middle, tab ordering effects) and why they matter for spec design
+3. The Self-Improving Spec Loop — how the evaluate-then-improve loop differs from output-iterating approaches
+4. What Makes This Different — the framing distinction: optimizing spec quality vs. output quality
+
+**Standards**
+- Concept-level only. No skill-specific implementation details (those belong in skill category docs/).
+- Does not duplicate APPROACH.md. APPROACH.md covers the philosophical and research foundations; concepts.md covers operational definitions a practitioner needs while building or evaluating a spec.
+- Skill category docs/ files reference concepts.md for background rather than restating the definitions inline.
+- When a new concept is established by any skill category that applies project-wide, add it here.
+
 ## Badge Convention
 
 All README files open with a row of shields.io badges that illustrate the technologies used in that directory. Badges appear before the title, one line, no surrounding prose.

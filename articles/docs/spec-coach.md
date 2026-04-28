@@ -47,18 +47,20 @@ When `reference_docs` is absent or empty, the factual accuracy audit (Part 4) is
 A "Spec Coach" tab is created in the article doc (or overwritten if it already exists) containing a plain-text report with up to four parts:
 
 **Part 1 — Constraint Saturation Analysis**
-Determines whether the spec's requirements are achievable within the target word count. Assigns a verdict of HEALTHY, TIGHT, or OVER-DETERMINED. An OVER-DETERMINED spec will produce declining scores across iterative cycles regardless of any improvements — it must shed constraints before it can improve.
+Determines whether the spec's requirements are achievable within the target word count. Assigns a verdict of HEALTHY, TIGHT, or OVER-DETERMINED. See [concepts.md](../../docs/concepts.md#constraint-saturation) for a full explanation of the saturation model and what each verdict means for iteration.
 
 **Part 2 — Spec Quality Scoring**
 Scores the article against the spec's own rubric (or a constructed rubric if the spec does not define one). Provides per-criterion scores with evidence and a weighted composite. Includes a "Path to 11/10" section with concrete recommendations for improving the spec beyond its current ceiling.
 
 **Part 3 — Semantic Drift Analysis**
-Analyzes whether sequential tab processing caused the article to drift from the full set of instructions. Reports probabilities (Low / Moderate / High) for four drift mechanisms: primacy bias, recency bias, lost-in-the-middle, and suboptimal tab ordering. Ends with the top 3 concrete modifications to reduce drift.
+Analyzes whether sequential tab processing caused the article to drift from the full set of instructions. Reports probabilities (Low / Moderate / High) for four drift mechanisms: primacy bias, recency bias, lost-in-the-middle, and suboptimal tab ordering. Ends with the top 3 concrete modifications to reduce drift. See [concepts.md](../../docs/concepts.md#semantic-drift) for a full explanation of each mechanism.
 
 **Part 4 — Factual Accuracy Audit** _(only when reference_docs provided)_
 Cross-references every verifiable factual claim in the article against the reference documents. Categorizes findings as VERIFIED, INACCURACY, UNSUPPORTED, or MINOR. Traces each inaccuracy to its source (spec instruction vs. model hallucination). Provides correction text and identifies which spec tab to fix when the spec caused the error.
 
 ## Saturation verdicts
+
+See [concepts.md](../../docs/concepts.md#constraint-saturation) for full definitions. Quick reference:
 
 | Verdict | Meaning |
 |---|---|

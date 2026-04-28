@@ -4,7 +4,13 @@
 
 # Spec-Driven AI Skills
 
-A growing collection of Claude Code skill suites that implement spec-driven workflows. Each category is a self-contained subdirectory with its own skills, docs, and tests.
+Most AI tools help you improve the output. These skills help you improve the instructions that produced it.
+
+The core insight: spec quality — not model capability — is the binding constraint on AI output quality. A well-designed spec consistently produces strong output. A poorly-designed one produces unpredictable output no matter how capable the model. These skills close the feedback loop on the spec itself: scoring it, diagnosing why it drifted, and applying improvements automatically. Each iteration leaves a tighter, shorter spec that generates better output across every future run.
+
+The result is different from what most AI generation workflows produce. Instead of accumulating more instructions over time, the spec converges toward only what is load-bearing — and stops there.
+
+[Read the full rationale →](APPROACH.md)
 
 ## Skill categories
 

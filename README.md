@@ -30,11 +30,19 @@ Skills are installed into your own project using Claude Code's native plugin sys
 /plugin install articles@sdai-marketplace
 ```
 
-This copies the plugin's skills into your project's `.claude/skills/` directory, where Claude Code picks them up automatically as slash commands.
+Claude Code will ask where to install. Choose the scope that fits your situation:
+
+| Scope | Who can use it | Committed to git | When to choose it |
+|---|---|---|---|
+| **User** | You only, in all your projects | No | You want these skills available everywhere you work, not just one project |
+| **Project** | Everyone on the repo | Yes | Your whole team needs the skills; install settings are shared via version control |
+| **Local** | You only, in this project | No | You want to try the skills in one project without affecting your team or your other projects |
+
+> **Not sure?** Choose **User** if you're working solo or just want the skills for yourself. Choose **Project** if you're on a team and everyone should have access.
 
 **Available plugins:**
 
-| Plugin | Installs | Additional requirements |
+| Plugin | Skills installed | Additional requirements |
 |---|---|---|
 | `articles` | `/articles:generate-article`, `/articles:spec-coach`, `/articles:spec-auto-tune` | [`gws` CLI](https://github.com/stoe/gws) with Google Workspace credentials; Python 3 |
 

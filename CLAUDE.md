@@ -22,4 +22,4 @@ When working inside a skill category subdirectory, read that subdirectory's `CLA
 
 | Directory | Skills | Notes |
 |---|---|---|
-| `articles/` | `/generate-article`, `/spec-coach`, `/spec-auto-tune` | Requires `gws` CLI and Google Workspace credentials |
+| `articles/` | `/articles:generate-article`, `/articles:spec-coach`, `/articles:spec-auto-tune` | Requires `gws` CLI and Google Workspace credentials |

@@ -36,7 +36,7 @@ This copies the plugin's skills into your project's `.claude/skills/` directory,
 
 | Plugin | Installs | Additional requirements |
 |---|---|---|
-| `articles` | `/generate-article`, `/spec-coach`, `/spec-auto-tune` | [`gws` CLI](https://github.com/stoe/gws) with Google Workspace credentials; Python 3 |
+| `articles` | `/articles:generate-article`, `/articles:spec-coach`, `/articles:spec-auto-tune` | [`gws` CLI](https://github.com/stoe/gws) with Google Workspace credentials; Python 3 |
 
 See each plugin's README for usage details after installation.
 

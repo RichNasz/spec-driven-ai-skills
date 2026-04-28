@@ -1,27 +1,27 @@
-# /spec-coach
+# /articles:spec-coach
 
 Evaluates a generated article against its spec. Scores the article using the rubric the spec itself defines, analyzes the tab chain for semantic drift, and — when reference documents are provided — audits every verifiable factual claim. Writes a structured plain-text report to a "Spec Coach" tab in the article doc.
 
-Run this after `/generate-article`.
+Run this after `/articles:generate-article`.
 
 ## Usage
 
 ```
-/spec-coach <spec_doc_url> <article_doc_url>
-/spec-coach <config_yaml_path>
+/articles:spec-coach <spec_doc_url> <article_doc_url>
+/articles:spec-coach <config_yaml_path>
 ```
 
 **Positional form:**
 
 ```
-/spec-coach "https://docs.google.com/document/d/<SPEC_ID>/edit" \
+/articles:spec-coach "https://docs.google.com/document/d/<SPEC_ID>/edit" \
             "https://docs.google.com/document/d/<ARTICLE_ID>/edit"
 ```
 
 **YAML form** (required for reference doc auditing):
 
 ```
-/spec-coach my-article.yaml
+/articles:spec-coach my-article.yaml
 ```
 
 ## YAML config
@@ -89,7 +89,7 @@ reference_docs:
 ```
 
 ```
-/spec-coach my-article.yaml
+/articles:spec-coach my-article.yaml
 ```
 
 The skill reads both docs and the reference doc, runs all four analysis parts, and writes the full report to the "Spec Coach" tab in the article doc.

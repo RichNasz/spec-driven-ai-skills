@@ -2,7 +2,7 @@
 
 ## What this project is
 
-Four Claude Code skills (`/generate-article`, `/spec-coach`, `/spec-auto-tune`, plus the shared `gws-utils` dependency) that implement a spec-driven article generation pipeline using Google Docs and the `gws` CLI.
+Four Claude Code skills (`/articles:generate-article`, `/articles:spec-coach`, `/articles:spec-auto-tune`, plus the shared `gws-utils` dependency) that implement a spec-driven article generation pipeline using Google Docs and the `gws` CLI.
 
 ## Skill locations
 
@@ -10,12 +10,12 @@ Skills live in `.claude/skills/<name>/SKILL.md` and are invoked as slash command
 
 | Command | Skill file | Notes |
 |---|---|---|
-| `/generate-article` | `.claude/skills/generate-article/SKILL.md` | |
-| `/spec-coach` | `.claude/skills/spec-coach/SKILL.md` | |
-| `/spec-auto-tune` | `.claude/skills/spec-auto-tune/SKILL.md` | |
+| `/articles:generate-article` | `.claude/skills/articles:generate-article/SKILL.md` | |
+| `/articles:spec-coach` | `.claude/skills/articles:spec-coach/SKILL.md` | |
+| `/articles:spec-auto-tune` | `.claude/skills/articles:spec-auto-tune/SKILL.md` | |
 | (not invoked directly) | `.claude/skills/gws-utils/SKILL.md` | Shared gws utility scripts |
 
-An example YAML config is at `.claude/skills/spec-auto-tune/config.example.yaml`.
+An example YAML config is at `.claude/skills/articles:spec-auto-tune/config.example.yaml`.
 
 ## gws-utils shared dependency
 
@@ -50,15 +50,15 @@ Internal specs in `specs/` follow a three-file naming pattern per skill:
 
 Each skill has exactly one permitted write target:
 
-- `/generate-article` → named tab in the article doc only; spec doc is read-only
-- `/spec-coach` → "Spec Coach" tab in the article doc only; spec doc and reference docs are read-only
-- `/spec-auto-tune` → spec doc tabs only; article doc and reference docs are read-only
+- `/articles:generate-article` → named tab in the article doc only; spec doc is read-only
+- `/articles:spec-coach` → "Spec Coach" tab in the article doc only; spec doc and reference docs are read-only
+- `/articles:spec-auto-tune` → spec doc tabs only; article doc and reference docs are read-only
 
 ## Test scripts
 
 Persistent shell scripts for running test scenarios live in `tests/`. Each scenario has a `setup-<ID>.sh` and (where applicable) a `verify-<ID>.sh`. A shared `tests/lib.sh` provides fixture management and assert helpers.
 
-Run all scripts from the project root: `./tests/generate-article/setup-G2.sh`
+Run all scripts from the project root: `./tests/articles:generate-article/setup-G2.sh`
 
 For fixture reset utilities: `./tests/reset-article-doc.sh` and `./tests/reset-spec-doc.sh <fixture_key>`.
 

@@ -1,18 +1,18 @@
-# /generate-article
+# /articles:generate-article
 
 Reads a multi-tab Google Doc spec and writes a generated article to a destination Google Doc. Each tab in the spec is a sequential refinement prompt applied in order — earlier tabs establish persona and content, later tabs handle tone, scoring, and style.
 
 ## Usage
 
 ```
-/generate-article <spec_doc_url> <article_doc_url> [dest_tab_name]
-/generate-article <config_yaml_path>
+/articles:generate-article <spec_doc_url> <article_doc_url> [dest_tab_name]
+/articles:generate-article <config_yaml_path>
 ```
 
 **Positional form** — pass URLs directly:
 
 ```
-/generate-article "https://docs.google.com/document/d/<SPEC_ID>/edit" \
+/articles:generate-article "https://docs.google.com/document/d/<SPEC_ID>/edit" \
                   "https://docs.google.com/document/d/<ARTICLE_ID>/edit" \
                   "My Article"
 ```
@@ -20,7 +20,7 @@ Reads a multi-tab Google Doc spec and writes a generated article to a destinatio
 **YAML form** — pass a path to a config file (recommended when sharing configs or using with spec-coach and spec-auto-tune):
 
 ```
-/generate-article my-article.yaml
+/articles:generate-article my-article.yaml
 ```
 
 ## YAML config
@@ -62,7 +62,7 @@ dest_tab_name:   "Draft v1"
 ```
 
 ```
-/generate-article blog-post.yaml
+/articles:generate-article blog-post.yaml
 ```
 
 The skill reads all tabs from the spec doc in order, applies them as a cumulative prompt chain, and writes the result to the "Draft v1" tab in the article doc.

@@ -1,19 +1,19 @@
-# /spec-auto-tune
+# /articles:spec-auto-tune
 
 Reads the "Spec Coach" tab in the article doc and applies the recommended improvements directly to the spec doc. Prints a structured report of every change made and every recommendation skipped. Tab reordering recommendations — which the API cannot perform — are listed as step-by-step manual instructions.
 
-Run this after `/spec-coach`.
+Run this after `/articles:spec-coach`.
 
 ## Usage
 
 ```
-/spec-auto-tune <config_yaml_path>
+/articles:spec-auto-tune <config_yaml_path>
 ```
 
 spec-auto-tune accepts only a YAML config file (no positional URL form).
 
 ```
-/spec-auto-tune my-article.yaml
+/articles:spec-auto-tune my-article.yaml
 ```
 
 ## YAML config
@@ -36,10 +36,10 @@ reference_docs:                                                           # opti
 
 ## Prerequisite
 
-The "Spec Coach" tab must already exist in the article doc. Run `/spec-coach` first if it does not. If the tab is missing, the skill stops immediately:
+The "Spec Coach" tab must already exist in the article doc. Run `/articles:spec-coach` first if it does not. If the tab is missing, the skill stops immediately:
 
 ```
-"No 'Spec Coach' tab found in the article document. Run /spec-coach first."
+"No 'Spec Coach' tab found in the article document. Run /articles:spec-coach first."
 ```
 
 ## What you get
@@ -93,11 +93,11 @@ reference_docs:
 ```
 
 ```
-/spec-coach my-article.yaml      # run first — produces "Spec Coach" tab
-/spec-auto-tune my-article.yaml  # reads that tab; improves the spec
+/articles:spec-coach my-article.yaml      # run first — produces "Spec Coach" tab
+/articles:spec-auto-tune my-article.yaml  # reads that tab; improves the spec
 ```
 
-After `/spec-auto-tune` completes, run `/generate-article` again to regenerate the article from the improved spec, then run `/spec-coach` again to see whether the scores improved.
+After `/articles:spec-auto-tune` completes, run `/articles:generate-article` again to regenerate the article from the improved spec, then run `/articles:spec-coach` again to see whether the scores improved.
 
 ## Notes
 

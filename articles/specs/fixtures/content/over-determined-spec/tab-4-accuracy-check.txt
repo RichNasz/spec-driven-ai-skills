@@ -1,0 +1,5 @@
+Score technical accuracy on a scale of 0-10.
+
+Technical accuracy criteria: Are all Git concepts described correctly? Are branch names and workflow steps precise? Are all claims about GitFlow and trunk-based development factually accurate?
+
+If the technical accuracy score is below 8.0, identify every inaccurate or imprecise claim, correct each one individually, and re-score the revised article. Continue this loop until the technical accuracy score reaches 8.0 or above before proceeding.

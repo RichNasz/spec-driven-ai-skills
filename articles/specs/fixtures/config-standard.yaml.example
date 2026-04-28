@@ -1,0 +1,6 @@
+# Standard test config — no reference docs
+# Used by: G2, G5, G6, C2, C4, C6, A1-A3, A6-A8
+# Fill in your doc IDs from fixtures.yaml, then rename to config-standard.yaml.
+
+spec_doc_url:    "https://docs.google.com/document/d/<STANDARD_SPEC_DOC_ID>/edit"
+article_doc_url: "https://docs.google.com/document/d/<STANDARD_ARTICLE_DOC_ID>/edit"

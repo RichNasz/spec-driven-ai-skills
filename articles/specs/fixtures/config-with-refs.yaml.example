@@ -1,0 +1,11 @@
+# Standard test config — with reference doc
+# Used by: G7, C3, A4, P1, P2
+# Fill in your doc IDs from fixtures.yaml, then rename to config-with-refs.yaml.
+
+spec_doc_url:    "https://docs.google.com/document/d/<STANDARD_SPEC_DOC_ID>/edit"
+article_doc_url: "https://docs.google.com/document/d/<STANDARD_ARTICLE_DOC_ID>/edit"
+dest_tab_name:   "Generated Article"
+
+reference_docs:
+  - url:         "https://docs.google.com/document/d/<REFERENCE_DOC_ID>/edit"
+    description: "Reference document for factual accuracy audit — contains one seeded inaccuracy"

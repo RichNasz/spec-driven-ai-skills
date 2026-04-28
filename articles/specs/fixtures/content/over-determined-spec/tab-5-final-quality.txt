@@ -1,0 +1,9 @@
+Score the article against the full quality rubric:
+
+Readability (40%)
+Technical accuracy (35%)
+Clarity (25%)
+
+Threshold: 9.0/10 composite.
+
+If the composite score is below 9.0, identify every criterion scoring below 9.0 and revise the article comprehensively to address each weakness. Re-score the revised article. Repeat this loop until the composite score reaches 9.0 or above.

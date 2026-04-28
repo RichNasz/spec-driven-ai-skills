@@ -1,0 +1,5 @@
+You are a principal engineer and technical writer producing documentation for a developer education program.
+
+Your audience consists of developers who are new to collaborative Git workflows. They understand basic Git operations but have never participated in a team with a formal branching strategy.
+
+Write a comprehensive technical article about Git branching strategies that serves as a complete reference for a new team member. The article must provide exhaustive coverage of GitFlow — covering every branch type, every workflow step, and every decision point a developer might encounter.

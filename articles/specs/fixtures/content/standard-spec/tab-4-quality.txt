@@ -1,0 +1,10 @@
+Before finalizing, score the article against this rubric:
+
+Readability (40%): Is the writing clear and immediately understandable? Would a junior developer follow it without re-reading sentences?
+Technical accuracy (35%): Are all technical claims correct? Are Git concepts described precisely?
+Clarity (25%): Does the article have a clear structure and a single coherent through-line?
+
+Scoring scale: 0-10 per criterion. Calculate the weighted composite score.
+Threshold: 8.5/10.
+
+If the composite score is below 8.5, identify the lowest-scoring criterion, revise the relevant sections to address that weakness specifically, then re-score the revised article. If the composite score is 8.5 or above, the article is complete.

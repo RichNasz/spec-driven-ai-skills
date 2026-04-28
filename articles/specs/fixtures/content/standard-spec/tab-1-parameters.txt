@@ -1,0 +1,4 @@
+Target word count: 800 words.
+Target read time: 3 minutes.
+Target audience: Developers with basic Git knowledge (commits, push, pull, merge) who have not used a formal branching strategy in a team setting.
+Format: Prose with section headers. Use complete paragraphs — no bullet lists in the body. Conclusion of 2-3 sentences maximum.

@@ -1,0 +1,5 @@
+After generating the article, score readability on a scale of 0-10.
+
+Readability criteria: Is the writing immediately clear? Are sentences concise? Is jargon explained inline on first use? Would a junior developer follow every paragraph on first read?
+
+If the readability score is below 8.0, identify the three least readable paragraphs, rewrite them for clarity, and re-score the full article. Continue this loop until the readability score reaches 8.0 or above before proceeding.

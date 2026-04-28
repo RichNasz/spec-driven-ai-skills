@@ -1,0 +1,13 @@
+Tone: Conversational and technically precise. Write like a senior engineer explaining something to a colleague — direct, clear, no padding.
+
+Use concrete examples throughout:
+- Real-looking branch names: feature/user-auth, bugfix/login-redirect, hotfix/session-timeout
+- Realistic scenarios: two engineers working on different features simultaneously, a bug discovered in production while a release is in progress
+
+Avoid these patterns:
+- "In conclusion" or "To summarize" as opening words of the final paragraph
+- Passive voice where active is available
+- Jargon without a brief inline explanation on first use
+- Filler phrases: "It is important to note that", "As we can see", "It's worth mentioning"
+
+The opening sentence must hook the reader immediately — no scene-setting preamble.

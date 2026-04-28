@@ -1,0 +1,13 @@
+# Fixture Google Doc URL Registry
+# Copy this file to fixtures.yaml and replace the placeholders with your own doc IDs.
+# Create these Google Docs and populate them using the reset scripts:
+#   ./tests/reset-spec-doc.sh <fixture_key>
+#   ./tests/reset-article-doc.sh
+#
+# Canonical tab content for resetting is in specs/fixtures/content/.
+
+minimal_spec_doc:     "https://docs.google.com/document/d/<YOUR_MINIMAL_SPEC_DOC_ID>/edit"
+standard_spec_doc:    "https://docs.google.com/document/d/<YOUR_STANDARD_SPEC_DOC_ID>/edit"
+over_determined_spec: "https://docs.google.com/document/d/<YOUR_OVER_DETERMINED_SPEC_DOC_ID>/edit"
+standard_article_doc: "https://docs.google.com/document/d/<YOUR_ARTICLE_DOC_ID>/edit"
+reference_doc:        "https://docs.google.com/document/d/<YOUR_REFERENCE_DOC_ID>/edit"

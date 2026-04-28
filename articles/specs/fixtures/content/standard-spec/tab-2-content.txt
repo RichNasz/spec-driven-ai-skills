@@ -1,0 +1,13 @@
+Cover the following topics. Depth of treatment is specified for each item.
+
+DEDICATED PARAGRAPH — Branching strategies: what they are and why teams need them
+Explain what a branch is in the context of parallel team work. Describe the problem a branching strategy solves: multiple engineers working simultaneously without destabilizing shared code. Make the case for why ad-hoc branching is insufficient for teams beyond two people.
+
+DEDICATED PARAGRAPH — GitFlow
+Describe GitFlow as a concrete example of a branching strategy. GitFlow maintains three permanent branches: main, develop, and release. Feature work happens on short-lived branches cut from develop. When a feature is complete, it merges back to develop. Use a realistic example with real-looking branch names (e.g., feature/user-auth, release/2.4.0).
+
+SUBSTANTIVE MENTION — Trunk-based development
+Introduce trunk-based development as a simpler alternative to GitFlow. Note that it favors very short-lived branches and frequent integration into a single main branch. Briefly contrast it with GitFlow without making a strong recommendation either way.
+
+SUBSTANTIVE MENTION — Branch naming conventions
+Explain why consistent naming matters for team coordination. Give examples of common prefixes: feature/, bugfix/, hotfix/, release/. Note that naming conventions make branch purpose clear at a glance in a busy repository.

@@ -1,0 +1,8 @@
+# Empty reference_docs list — skill should behave identically to no reference docs
+# Used by: C6
+# Fill in your doc IDs from fixtures.yaml, then rename to config-empty-refs.yaml.
+
+spec_doc_url:    "https://docs.google.com/document/d/<STANDARD_SPEC_DOC_ID>/edit"
+article_doc_url: "https://docs.google.com/document/d/<STANDARD_ARTICLE_DOC_ID>/edit"
+
+reference_docs: []

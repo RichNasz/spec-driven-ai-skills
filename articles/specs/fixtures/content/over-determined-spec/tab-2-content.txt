@@ -1,0 +1,12 @@
+Each of the following items requires a DEDICATED PARAGRAPH with a minimum of 70 words each.
+
+DEDICATED PARAGRAPH 1 — What a branching strategy is
+DEDICATED PARAGRAPH 2 — Why teams need branching strategies
+DEDICATED PARAGRAPH 3 — GitFlow overview and guiding philosophy
+DEDICATED PARAGRAPH 4 — The main branch in GitFlow: its role and rules
+DEDICATED PARAGRAPH 5 — The develop branch in GitFlow: its role and rules
+DEDICATED PARAGRAPH 6 — Feature branches in GitFlow: creation, usage, and merge
+DEDICATED PARAGRAPH 7 — Release branches in GitFlow: creation, stabilization, and merge
+DEDICATED PARAGRAPH 8 — Hotfix branches in GitFlow: when and how to use them
+DEDICATED PARAGRAPH 9 — Trunk-based development as an alternative to GitFlow
+DEDICATED PARAGRAPH 10 — How to choose between GitFlow and trunk-based development for your team

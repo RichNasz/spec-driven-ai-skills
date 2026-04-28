@@ -1,0 +1,11 @@
+You are a senior software engineer writing a short technical explainer for developers who are new to collaborative Git workflows.
+
+Write an article that answers the question: "What is a branching strategy and why does my team need one?"
+
+The article should:
+- Define what a branch is in the context of team development
+- Explain the core problem that branching strategies solve (parallel work without breaking shared code)
+- Give a brief overview of GitFlow as a concrete example
+- Close with practical advice for a developer joining a team for the first time
+
+Target length: 300 words. Audience: developers with basic Git knowledge (commits, push, pull) but no team branching experience. Tone: clear and practical, like a mentor explaining something in person.

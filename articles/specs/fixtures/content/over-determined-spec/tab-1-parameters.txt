@@ -1,0 +1,4 @@
+Target word count: 600 words.
+Target read time: 2.5 minutes.
+Target audience: Developers new to team Git workflows.
+Format: Prose with section headers.

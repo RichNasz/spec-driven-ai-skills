@@ -1,0 +1,6 @@
+# Same-doc config — triggers the same-doc guard in all three skills
+# Used by: G1, C1, A1
+# Use any single doc ID for both fields (they must be identical to trigger the guard).
+
+spec_doc_url:    "https://docs.google.com/document/d/<ANY_DOC_ID>/edit"
+article_doc_url: "https://docs.google.com/document/d/<ANY_DOC_ID>/edit"

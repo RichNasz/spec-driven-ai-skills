@@ -1,0 +1,6 @@
+{
+  "name": "sdai",
+  "description": "Spec-driven AI: generate articles from Google Doc specs, evaluate spec quality, and auto-tune specs for the next iteration. Requires gws CLI and Python 3.",
+  "version": "1.0.0",
+  "author": "rnaszcyn"
+}

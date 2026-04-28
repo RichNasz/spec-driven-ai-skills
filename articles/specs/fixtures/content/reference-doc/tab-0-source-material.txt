@@ -1,0 +1,31 @@
+Git Branching Strategies: Technical Reference
+
+What Is a Branching Strategy
+
+A Git branching strategy is a shared convention that defines how branches are created, named, used, and merged in a team codebase. Branching strategies emerged to address a coordination problem: when multiple engineers work on the same codebase simultaneously, ad-hoc branching leads to conflicting changes, unstable shared branches, and difficult merges. A strategy gives everyone the same mental model and rules, making parallel work predictable.
+
+GitFlow
+
+GitFlow is a branching model introduced by Vincent Driessen. It organizes work around two permanent long-lived branches: main and develop.
+
+The main branch always reflects the current production state. No direct commits are made to main; changes arrive only through merge operations from release or hotfix branches.
+
+The develop branch serves as the integration target for all completed feature work. It represents the state of the next planned release after all in-progress features are merged.
+
+GitFlow also defines three types of temporary supporting branches:
+
+Feature branches are cut from develop and merged back to develop when work is complete. They are deleted after merging. Naming convention: feature/<description>.
+
+Release branches are cut from develop when a release is being prepared. They allow final stabilization work (minor bug fixes, version bumping) without blocking ongoing feature development on develop. Once stable, the release branch is merged to both main and develop, then deleted. Naming convention: release/<version>.
+
+Hotfix branches are cut from main when a production defect must be fixed immediately, outside the normal release cycle. Once validated, the hotfix branch is merged to both main and develop, then deleted. Naming convention: hotfix/<description>.
+
+Key property: only main and develop are permanent. Feature, release, and hotfix branches are temporary and deleted after merging.
+
+Trunk-Based Development
+
+Trunk-based development is a simpler alternative to GitFlow. All engineers integrate work into a single main branch (the trunk) frequently — ideally at least once per day. Feature branches, if used, are kept very short-lived (hours to a day or two at most). This approach reduces merge complexity and supports continuous integration practices, but requires strong automated test coverage to prevent instability on the main branch. It is commonly used in organizations practicing continuous deployment.
+
+Branch Naming Conventions
+
+Consistent branch naming makes branch purpose clear without inspecting commits. Common conventions use prefixes to indicate intent: feature/ for new functionality, bugfix/ for defect repairs, hotfix/ for urgent production fixes, release/ for release preparation. Teams typically enforce naming conventions through Git hooks or pull request validation rules.

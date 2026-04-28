@@ -1,0 +1,20 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Claude Code local session data — machine-specific, not project artifacts
+.claude/.claude/
+.claude/plans/
+.claude/todos/
+
+# Personal config files — contain private Google Doc URLs
+# Users create these at the project root (e.g. my-article.yaml).
+# The config.example.yaml templates in skills/ are committed.
+/*.yaml
+/*.yml
+
+# Test fixture configs — contain real Google Doc URLs
+# Copy specs/fixtures/fixtures.yaml.example → fixtures.yaml and fill in your own doc IDs.
+# The config-*.yaml files are derived from fixtures.yaml and also ignored.
+specs/fixtures/*.yaml
+specs/fixtures/*.yml

@@ -1,0 +1,15 @@
+# spec-auto-tune config
+# Usage: /spec-auto-tune /path/to/this/config.yaml
+
+spec_doc_url: "https://docs.google.com/document/d/SPEC_DOC_ID/edit"
+article_doc_url: "https://docs.google.com/document/d/ARTICLE_DOC_ID/edit"
+
+# Optional: reference docs for research-backed improvements.
+# The skill reads these when a Spec Coach recommendation requires new factual content.
+# Omit this section entirely if no reference grounding is needed.
+reference_docs:
+  - url: "https://docs.google.com/document/d/REF_DOC_ID/edit"
+    description: "Red Hat Agentic AI FAQ — factual grounding for Red Hat product capabilities, architecture, and MCP server catalog"
+  # Add more reference docs as needed:
+  # - url: "https://docs.google.com/document/d/ANOTHER_REF_ID/edit"
+  #   description: "Description of what this document contains"

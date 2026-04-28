@@ -7,10 +7,31 @@
 - Root-level documents must not duplicate content in subdirectory documents. They orient and point; subdirectories explain.
 - LICENSE and CODE_OF_CONDUCT live at root and are not regenerated — they are edited directly.
 
+## Badge Convention
+
+All README files open with a row of shields.io badges that illustrate the technologies used in that directory. Badges appear before the title, one line, no surrounding prose.
+
+**Badge format**
+```
+[![Label](https://img.shields.io/badge/<Label>-<Message>-<Color>.svg)](<link>)   ← linked badge
+![Label](https://img.shields.io/badge/<Label>-<Message>-<Color>)                 ← unlinked badge
+```
+
+**Root README badges** (in this order)
+
+| Badge | Format |
+|---|---|
+| License | `[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)` |
+| Built with Claude Code | `![Built with Claude Code](https://img.shields.io/badge/Built%20with-Claude%20Code-blueviolet)` |
+| Spec-Driven | `![Spec-Driven](https://img.shields.io/badge/Approach-Spec--Driven-green)` |
+
+Subdirectory READMEs add badges for technologies specific to that category (e.g., `articles/` adds a Google Docs badge). The three root badges above appear in every README in the project.
+
 ## README.md
 
 **Structure**
-1. Title and one-sentence description
+1. Badges
+2. Title and one-sentence description
 2. Skill categories table: columns are category directory (linked to its README), and a one-line description of what it does
 3. Getting started: one or two sentences directing the reader to navigate to a skill category
 4. Background: link to APPROACH.md with a one-line description

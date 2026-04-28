@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Spec-driven article generation — generate articles from Google Doc specs, evaluate spec quality with constraint saturation and semantic drift analysis, and auto-tune specs for the next iteration.",
   "author": {
-    "name": "rnaszcyn"
+    "name": "Richard Naszcyniec"
   },
   "homepage": "https://github.com/RichNasz/spec-driven-ai-skills",
   "repository": "https://github.com/RichNasz/spec-driven-ai-skills",

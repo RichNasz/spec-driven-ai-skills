@@ -12,6 +12,16 @@ A growing collection of Claude Code skill suites that implement spec-driven work
 |---|---|
 | [`articles/`](articles/README.md) | Spec-driven article generation — generate articles from Google Doc specs, evaluate spec quality, and auto-tune specs for the next iteration |
 
+## Marketplace
+
+Install any skill suite into your own project with a single command. Clone this repo, open it in Claude Code, then run:
+
+```
+/install-skills articles ~/path/to/your-project
+```
+
+Available suites are listed in [`marketplace/catalog.yaml`](marketplace/catalog.yaml). Run `/install-skills` with no arguments to browse them interactively.
+
 ## Getting started
 
 Navigate to the relevant skill category and follow its README.

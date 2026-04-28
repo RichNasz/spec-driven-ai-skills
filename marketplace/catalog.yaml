@@ -1,0 +1,23 @@
+suites:
+  articles:
+    name: "Spec-Driven Article Generation"
+    description: >
+      Generate articles from Google Doc specs, evaluate spec quality with
+      constraint saturation and semantic drift analysis, and auto-tune specs
+      for the next iteration. Closes the feedback loop on the spec, not the
+      output — each cycle leaves a measurably better spec and a better article.
+    version: "1.0.0"
+    docs: "articles/README.md"
+    system_requires:
+      - "gws CLI (https://github.com/stoe/gws) with Google Workspace credentials"
+      - "Python 3"
+    skills:
+      - name: "generate-article"
+        source: "articles/.claude/skills/generate-article"
+      - name: "spec-coach"
+        source: "articles/.claude/skills/spec-coach"
+      - name: "spec-auto-tune"
+        source: "articles/.claude/skills/spec-auto-tune"
+      - name: "gws-utils"
+        source: "articles/.claude/skills/gws-utils"
+        role: "shared-dependency"

@@ -6,20 +6,20 @@ Four Claude Code skills (`/articles:generate-article`, `/articles:spec-coach`, `
 
 ## Skill locations
 
-Skills live in `.claude/skills/<name>/SKILL.md` and are invoked as slash commands.
+Skills live in `skills/<name>/SKILL.md` and are invoked as slash commands.
 
 | Command | Skill file | Notes |
 |---|---|---|
-| `/articles:generate-article` | `.claude/skills/articles:generate-article/SKILL.md` | |
-| `/articles:spec-coach` | `.claude/skills/articles:spec-coach/SKILL.md` | |
-| `/articles:spec-auto-tune` | `.claude/skills/articles:spec-auto-tune/SKILL.md` | |
-| (not invoked directly) | `.claude/skills/gws-utils/SKILL.md` | Shared gws utility scripts |
+| `/articles:generate-article` | `skills/generate-article/SKILL.md` | |
+| `/articles:spec-coach` | `skills/spec-coach/SKILL.md` | |
+| `/articles:spec-auto-tune` | `skills/spec-auto-tune/SKILL.md` | |
+| (not invoked directly) | `skills/gws-utils/SKILL.md` | Shared gws utility scripts |
 
-An example YAML config is at `.claude/skills/articles:spec-auto-tune/config.example.yaml`.
+An example YAML config is at `skills/spec-auto-tune/config.example.yaml`.
 
 ## gws-utils shared dependency
 
-`gws-utils` is a shared skill that contains prebuilt Python scripts for all Google Docs API operations. The three main skills call these scripts instead of building inline Python. Scripts live at `.claude/skills/gws-utils/scripts/` and handle keyring-line stripping, JSON encoding, and correct batchUpdate request types internally.
+`gws-utils` is a shared skill that contains prebuilt Python scripts for all Google Docs API operations. The three main skills call these scripts instead of building inline Python. Scripts live at `skills/gws-utils/scripts/` and handle keyring-line stripping, JSON encoding, and correct batchUpdate request types internally.
 
 All three main skills declare `metadata.requires: gws-utils` in their frontmatter. Install `gws-utils` alongside any of the three main skills.
 

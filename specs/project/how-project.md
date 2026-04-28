@@ -46,9 +46,9 @@ Subdirectory READMEs add badges for technologies specific to that category (e.g.
 **Structure**
 1. Badges
 2. Title and one-sentence description
-2. Skill categories table: columns are category directory (linked to its README), and a one-line description of what it does
-3. Getting started: one or two sentences directing the reader to navigate to a skill category
-4. Background: link to APPROACH.md with a one-line description
+3. Skill categories table: columns are category directory (linked to its README), and a one-line description of what it does
+4. Getting started: one or two sentences directing the reader to navigate to a skill category
+5. Background: link to APPROACH.md with a one-line description
 
 **Standards**
 - No prerequisites or installation instructions at root level — those belong in subdirectory READMEs.

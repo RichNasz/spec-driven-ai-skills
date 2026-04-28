@@ -64,10 +64,12 @@ Then regenerate and repeat. The Spec Coach report tells you when to stop.
 ## Repo layout
 
 ```
-.claude/skills/           Claude Code skill instruction sets (internal)
+.claude-plugin/           Plugin manifest (plugin.json)
+skills/                   Claude Code skill instruction sets (plugin distribution)
   generate-article/
   spec-coach/
   spec-auto-tune/
+  gws-utils/
 docs/                     User-facing skill documentation
 specs/                    Spec-driven development artifacts (internal)
   common-how/             Shared implementation guides
@@ -76,6 +78,8 @@ specs/                    Spec-driven development artifacts (internal)
   spec-coach/
   spec-auto-tune/
   pipeline/
+tests/                    Shell test scripts (setup, verify, reset)
+perfection-through-removal.yaml   Example YAML config for the skill pipeline
 ```
 
-`specs/` is an internal development artifact — it documents how the skills are built, not how to use them. Start with `docs/` if you are a user.
+`specs/` and `tests/` are internal development artifacts — they document how the skills are built and tested, not how to use them. Start with `docs/` if you are a user.

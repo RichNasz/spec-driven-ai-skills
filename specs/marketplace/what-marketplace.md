@@ -2,25 +2,32 @@
 
 ## Vision
 
-Make skill suites from this repository installable into any user project with a single Claude Code command. A developer should be able to clone this repo, invoke `/install-skills`, and have a complete, working skill suite copied into their target project — ready to use without manual file management.
+Make skill suites from this repository installable into any user project through Claude Code's native plugin system — no custom tooling required. A developer registers this repo as a marketplace once, then installs any available plugin with a single command.
 
 ## User Story
 
-As a developer who wants to use the spec-driven AI skills in my own project, I want to run a single command that installs the skill suite I need so that I don't have to manually copy files, resolve dependencies, or figure out which scripts belong where.
+As a developer who wants to use the spec-driven AI skills in my own project, I want to add this repo as a Claude Code marketplace and install the skill suite I need so that the skills are available in my project without manual file management.
 
 ## Functional Requirements
 
-1. Provide a `marketplace/catalog.yaml` at the repo root that lists all available skill suites with their skills, source paths, and system prerequisites.
-2. Provide an `/install-skills` Claude Code skill that reads the catalog and installs a chosen suite into a user-specified target project directory.
-3. When invoked without arguments, `/install-skills` lists available suites and prompts the user to choose.
-4. When invoked with a suite name and target path, `/install-skills` confirms the selection then proceeds without further prompting.
-5. Installation copies all required files — SKILL.md plus any supporting scripts and config examples — into `<target>/.claude/skills/<skill-name>/`.
-6. After installation, the skill reports every file copied and lists any system prerequisites the user must satisfy before the skills will work.
-7. The catalog is the single source of truth for suite definitions. Adding a new suite requires only a catalog entry — no changes to the install skill itself.
+1. Provide a `.claude-plugin/marketplace.json` at the repo root that registers the marketplace and lists all available plugins with their source paths, metadata, and tags.
+2. Each plugin directory contains a `.claude-plugin/plugin.json` with its own metadata.
+3. Each plugin's skills live in a `skills/` subdirectory within the plugin directory, following the Claude Code agent skills standard.
+4. Installation uses Claude Code's native `/plugin` commands — no custom install skill is needed.
+5. Adding a new plugin suite requires only a new directory with `.claude-plugin/plugin.json` and `skills/`, plus a new entry in the root `marketplace.json`.
+
+## Installation Flow
+
+```
+# Register the marketplace (once per machine)
+/plugin marketplace add https://github.com/RichNasz/spec-driven-ai-skills
+
+# Install a plugin into the current project
+/plugin install articles@sdai-marketplace
+```
 
 ## Success Criteria
 
-- A developer can install the `articles` suite by running `/install-skills articles ~/my-project` and immediately use `/generate-article`, `/spec-coach`, and `/spec-auto-tune` in that project (after satisfying system prerequisites).
-- Running `/install-skills` with no arguments shows a readable list of available suites with descriptions.
-- The install skill never modifies files in this repository — it only reads from the catalog and source skill directories.
-- Adding a new skill suite to the marketplace requires only a new entry in `marketplace/catalog.yaml` and the skill source files — no changes to the install skill.
+- A developer can install the `articles` plugin using the two commands above and immediately use `/generate-article`, `/spec-coach`, and `/spec-auto-tune` in their project.
+- The root `marketplace.json` is the single source of truth for available plugins.
+- Adding a new skill category to the marketplace requires no changes to existing files — only a new plugin directory and a new `marketplace.json` entry.

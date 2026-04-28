@@ -2,28 +2,23 @@
 
 ## What this project is
 
-A collection of Claude Code skill suites organized by category. Each subdirectory is an independent skill suite with its own `.claude/skills/`, `docs/`, `specs/`, and `CLAUDE.md`.
+A collection of Claude Code skill suites organized by category. Each subdirectory is an independent skill plugin with its own `.claude-plugin/plugin.json`, `skills/`, `docs/`, `specs/`, and `CLAUDE.md`.
 
 ## Structure
 
 ```
 spec-driven-ai-skills/
-  .claude/skills/    Project-level skills (install-skills)
-  marketplace/       Skill suite catalog and installation source
-  articles/          Spec-driven article generation (generate-article, spec-coach, spec-auto-tune)
+  .claude-plugin/    Marketplace registry (marketplace.json)
+  articles/          Spec-driven article generation plugin
+  docs/              Project-level concept documentation
+  specs/             Project-level specs (project/, marketplace/)
 ```
 
 ## Convention
 
 When working inside a skill category subdirectory, read that subdirectory's `CLAUDE.md` for context specific to those skills.
 
-## Project-level skills
-
-| Skill | Purpose |
-|---|---|
-| `/install-skills` | Install a skill suite from `marketplace/catalog.yaml` into a target project |
-
-## Current categories
+## Current plugins
 
 | Directory | Skills | Notes |
 |---|---|---|

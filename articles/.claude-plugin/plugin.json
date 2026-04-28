@@ -1,6 +1,12 @@
 {
-  "name": "sdai",
-  "description": "Spec-driven AI: generate articles from Google Doc specs, evaluate spec quality, and auto-tune specs for the next iteration. Requires gws CLI and Python 3.",
+  "name": "articles",
   "version": "1.0.0",
-  "author": "rnaszcyn"
+  "description": "Spec-driven article generation — generate articles from Google Doc specs, evaluate spec quality with constraint saturation and semantic drift analysis, and auto-tune specs for the next iteration.",
+  "author": {
+    "name": "rnaszcyn"
+  },
+  "homepage": "https://github.com/RichNasz/spec-driven-ai-skills",
+  "repository": "https://github.com/RichNasz/spec-driven-ai-skills",
+  "license": "MIT",
+  "tags": ["articles", "google-docs", "spec-driven", "content-generation", "gws"]
 }

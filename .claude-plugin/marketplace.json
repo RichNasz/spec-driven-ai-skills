@@ -1,0 +1,25 @@
+{
+  "name": "sdai-marketplace",
+  "owner": {
+    "name": "rnaszcyn"
+  },
+  "metadata": {
+    "description": "Spec-Driven AI skills marketplace — Claude Code skill suites for spec-driven workflows",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "articles",
+      "source": "./articles",
+      "description": "Spec-driven article generation — generate articles from Google Doc specs, evaluate spec quality, and auto-tune specs for the next iteration",
+      "version": "1.0.0",
+      "author": {
+        "name": "rnaszcyn"
+      },
+      "homepage": "https://github.com/RichNasz/spec-driven-ai-skills",
+      "repository": "https://github.com/RichNasz/spec-driven-ai-skills",
+      "license": "MIT",
+      "tags": ["articles", "google-docs", "spec-driven", "content-generation", "gws"]
+    }
+  ]
+}

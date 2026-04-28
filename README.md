@@ -14,13 +14,14 @@ A growing collection of Claude Code skill suites that implement spec-driven work
 
 ## Marketplace
 
-Install any skill suite into your own project with a single command. Clone this repo, open it in Claude Code, then run:
+Install any skill plugin into your own project using Claude Code's native plugin system:
 
 ```
-/install-skills articles ~/path/to/your-project
+/plugin marketplace add https://github.com/RichNasz/spec-driven-ai-skills
+/plugin install articles@sdai-marketplace
 ```
 
-Available suites are listed in [`marketplace/catalog.yaml`](marketplace/catalog.yaml). Run `/install-skills` with no arguments to browse them interactively.
+Available plugins are listed in [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json).
 
 ## Getting started
 

@@ -11,3 +11,7 @@ A growing collection of Claude Code skill suites that implement spec-driven work
 ## Getting started
 
 Navigate to the relevant skill category and follow its README.
+
+## Background
+
+[APPROACH.md](APPROACH.md) covers the philosophy and technical rationale behind spec-driven AI workflows.

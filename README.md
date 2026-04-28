@@ -40,6 +40,34 @@ This copies the plugin's skills into your project's `.claude/skills/` directory,
 
 See each plugin's README for usage details after installation.
 
+## Managing and removing skills
+
+**Update a plugin** to pick up the latest version from this repo:
+
+```
+/plugin marketplace update sdai-marketplace
+```
+
+**Disable a plugin** without uninstalling it:
+
+```
+/plugin disable articles@sdai-marketplace
+```
+
+**Uninstall a plugin** from your project:
+
+```
+/plugin uninstall articles@sdai-marketplace
+```
+
+**Remove this marketplace entirely** (also uninstalls any plugins you installed from it):
+
+```
+/plugin marketplace remove sdai-marketplace
+```
+
+You can also manage everything through the interactive UI — run `/plugin` to browse installed plugins and registered marketplaces by tab.
+
 ## Getting started
 
 Navigate to the relevant skill category's README for full usage documentation.

@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-"""Read all tabs from a Google Doc and print formatted content.
+"""Read tabs from a Google Doc and print formatted content.
 
-Usage: python3 read_doc.py <doc_id>
+Usage:
+  python3 read_doc.py <doc_id>                 # all tabs
+  python3 read_doc.py <doc_id> --tab <name>    # one tab by name (case-insensitive)
 
 Output (stdout) — one block per tab:
   === TAB 0: Tab Title | ID: <tabId> | endIndex=<n> ===
@@ -9,7 +11,7 @@ Output (stdout) — one block per tab:
 
 Exit codes: 0 success, 1 error
 """
-import json, subprocess, sys
+import argparse, json, subprocess, sys
 
 
 def gws_get(params):
@@ -29,19 +31,25 @@ def gws_get(params):
 
 
 def main():
-    if len(sys.argv) != 2:
-        print(f"Usage: {sys.argv[0]} <doc_id>", file=sys.stderr)
-        sys.exit(1)
+    parser = argparse.ArgumentParser(description='Read tabs from a Google Doc')
+    parser.add_argument('doc_id', help='Google Doc ID')
+    parser.add_argument('--tab', default=None, metavar='NAME',
+                        help='Print only the tab with this name (case-insensitive)')
+    args = parser.parse_args()
 
-    doc_id = sys.argv[1]
-    d = gws_get({"documentId": doc_id, "includeTabsContent": True})
+    d = gws_get({"documentId": args.doc_id, "includeTabsContent": True})
 
     tabs = d.get('tabs', [])
     if not tabs:
         print("Warning: no tabs returned — verify includeTabsContent is supported", file=sys.stderr)
 
+    tab_filter = args.tab.lower() if args.tab else None
+
     for i, tab in enumerate(tabs):
         props = tab.get('tabProperties', {})
+        title = props.get('title', '(default)')
+        if tab_filter and title.lower() != tab_filter:
+            continue
         body = tab.get('documentTab', {}).get('body', {})
         content = body.get('content', [])
         end_index = content[-1].get('endIndex', 1) if content else 1
@@ -50,7 +58,6 @@ def main():
             for block in content
             for el in block.get('paragraph', {}).get('elements', [])
         )
-        title = props.get('title', '(default)')
         tab_id = props.get('tabId', '')
         print(f'=== TAB {i}: {title} | ID: {tab_id} | endIndex={end_index} ===')
         print(text)

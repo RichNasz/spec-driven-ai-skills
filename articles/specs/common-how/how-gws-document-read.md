@@ -11,6 +11,21 @@ Defines the standard pattern for reading tab content from a Google Doc via the `
 - Never call `documents.get` and assume the tab order is stable across reads — always re-index from the response.
 - If `tabs` is empty after a read, the most likely cause is a missing `includeTabsContent: true` param, not an empty document.
 
+## Tab Filter (`--tab`)
+
+`read_doc.py` accepts an optional `--tab <name>` argument (case-insensitive) that prints only the matching tab. Use it when a skill needs a single known tab from a multi-tab document to avoid feeding irrelevant content into context:
+
+```bash
+python3 read_doc.py <DOC_ID> --tab "Generated Article"   # one tab only
+python3 read_doc.py <DOC_ID>                             # all tabs (default)
+```
+
+If `--tab` produces no output (empty result), the doc uses a different tab name — fall back to a full read and identify the target tab by its `=== TAB N: ...` header.
+
+## Parallel Reads
+
+When a skill must read multiple independent documents (e.g., spec + article, or multiple reference docs), issue all reads **in a single turn** so they execute concurrently. Do not issue one read, wait for the result, then issue the next.
+
 ## What to Extract Per Tab
 
 For each tab in the response, capture:

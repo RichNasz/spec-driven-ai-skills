@@ -28,11 +28,12 @@ All scripts are called with `python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scri
 
 ```
 python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <doc_id>
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <doc_id> --tab <name>
 ```
 
-Reads all tabs from the document. Strips the gws keyring line internally.
+Reads tabs from the document. Strips the gws keyring line internally. Without `--tab`, returns all tabs. With `--tab <name>`, returns only the tab whose title matches (case-insensitive); produces no output if no tab matches — the caller should fall back to a full read in that case.
 
-stdout — one block per tab:
+stdout — one block per tab returned:
 ```
 === TAB 0: Tab Title | ID: <tabId> | endIndex=<n> ===
 tab text content...
@@ -41,7 +42,7 @@ tab text content...
 ...
 ```
 
-Exit codes: 0 success, 1 gws error or parse failure.
+Exit codes: 0 success (including no-match on `--tab`), 1 gws error or parse failure.
 
 ### find_tab.py
 
@@ -57,10 +58,10 @@ Exit codes: 0 found, 1 not found or error (error message on stderr).
 ### create_tab.py
 
 ```
-python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/create_tab.py <doc_id> <tab_name> [insertion_index]
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/create_tab.py <doc_id> <tab_name>
 ```
 
-Creates a new tab. `insertion_index` is the 0-based target position (optional; omit to append).
+Creates a new tab, always appending it to the end of the document. The Google Docs API does not support positional insertion (`insertionIndex` is not a valid field in `addDocumentTab` — the API rejects it). Tab order is controlled entirely by creation order.
 
 stdout: new `tabId`
 Exit codes: 0 success, 1 error.
@@ -121,11 +122,14 @@ python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/clear_tab.py <DOC_ID> <TA
 python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/write_tab.py <DOC_ID> <TAB_ID> /tmp/content.txt
 ```
 
-**Reorder a tab (buffer-delete-recreate):**
+**Reorder tabs (create-verify-delete):**
 ```bash
-# Content already captured from read_doc.py — save to /tmp/tab_<tabId>_content.txt
-python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/delete_tab.py <DOC_ID> <SOURCE_TAB_ID>
-python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/create_tab.py <DOC_ID> "<TAB_TITLE>" <TARGET_INDEX>
-# Capture new tabId from above output
+# Content already captured from read_doc.py in /tmp/tab_<tabId>_content.txt
+# 1. Create replacement tabs in desired final order by appending:
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/create_tab.py <DOC_ID> "<TAB_TITLE>"
+# Capture new tabId, then write content:
 python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/write_tab.py <DOC_ID> <NEW_TAB_ID> /tmp/tab_<SOURCE_TAB_ID>_content.txt
+# 2. Verify new tab content (re-read doc, check new tab by tabId)
+# 3. Only after verification — delete the original:
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/delete_tab.py <DOC_ID> <SOURCE_TAB_ID>
 ```

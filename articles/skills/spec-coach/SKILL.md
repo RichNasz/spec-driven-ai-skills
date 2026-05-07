@@ -81,10 +81,12 @@ if arg.endswith(('.yaml', '.yml')):
         config['reference_docs'].append(current_ref)
     spec_doc_url    = config.get('spec_doc_url', '')
     article_doc_url = config.get('article_doc_url', '')
+    dest_tab_name   = config.get('dest_tab_name', 'Generated Article')
     reference_docs  = config.get('reference_docs', [])  # list of {url, description}
 else:
     spec_doc_url    = arg                # first positional
     article_doc_url = "<second_argument>"
+    dest_tab_name   = "Generated Article"
 
 spec    = doc_id(spec_doc_url)
 article = doc_id(article_doc_url)
@@ -92,28 +94,31 @@ assert spec != article, "Spec and article cannot be the same document."
 ```
 Stop and report the error if IDs match. Never proceed to Step 1 until this passes.
 
-### 1. Read both documents
+### 1. Read all documents in parallel
 
-**Read all spec tabs:**
+Issue the spec and article reads **simultaneously in a single turn** (two bash calls at once — do not wait for one before starting the other):
+
 ```bash
 python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <SPEC_ID>
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <ARTICLE_ID> --tab "<DEST_TAB_NAME>"
 ```
 
-Save the full output. You will need every tab's title and content for both the scoring and drift analysis steps. Each tab is delimited by a `=== TAB N: title | ID: tabId | endIndex=n ===` header line.
+Save both outputs. You need every spec tab for scoring and drift analysis. For the article, `--tab <DEST_TAB_NAME>` (resolved from `dest_tab_name` in the YAML config, defaulting to `"Generated Article"`) returns only the tab needed for analysis, avoiding a full doc read.
 
-**Read the generated article:**
+**If `--tab <DEST_TAB_NAME>` returns no tab block** (output is empty or contains only a warning), the article doc uses a different tab name. Fall back by issuing a full read without `--tab`:
 ```bash
 python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <ARTICLE_ID>
 ```
-
-Identify the tab that contains the generated article (typically named "Generated Article", "Claude Generated", or similar) by finding its `=== TAB N: ...` header. Save its full text for analysis.
+Then identify the article tab by its `=== TAB N: ...` header — look for names like "Generated Article", "Claude Generated", or the most recently written tab.
 
 **Read reference documents (if provided):**
-If the YAML config includes `reference_docs`, read each one. For each reference doc, extract the document ID from the URL:
+If the YAML config includes `reference_docs`, issue **all reference doc reads simultaneously in a single turn**:
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <REF_DOC_ID>
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <REF_DOC_1_ID>
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <REF_DOC_2_ID>
+# one call per reference doc, all in the same turn
 ```
-Save the full text of each reference document. These are the source of truth for the factual accuracy audit in Step 5. Reference documents are read-only — never call any write script against them.
+Save the full text of each. Reference documents are read-only — never call any write script against them.
 
 ### 2. Constraint Saturation Analysis
 
@@ -257,7 +262,11 @@ For each INACCURACY or high-risk UNSUPPORTED finding, provide:
 
 ### 6. Compose the Spec Coach report
 
-Combine the outputs from Steps 2, 3, 4, and 5 (when applicable) into a single plain-text document. Do NOT use markdown formatting (no #, *, `, or - for bullets). Use plain text with ALL-CAPS headers, numbered lists, and indentation for structure.
+Combine the outputs from Steps 2, 3, 4, and 5 (when applicable) into a single plain-text document. Do NOT use markdown formatting (no #, *, `, or - for bullets). Use plain text with ALL-CAPS section anchors, numbered lists, and indentation for structure. Section separators must be exactly 70 `=` characters — not 80, not approximate. Google Docs wraps longer lines.
+
+The report opens with an EXECUTIVE SUMMARY so the reader sees every verdict at a glance before reading the detail. Within each part, state the verdict or composite score first, then present the supporting evidence.
+
+For the EXECUTIVE SUMMARY "Top actions" list: synthesize the single most impactful action from each part into a ranked list of three. Rank by consequence — a factual correction (Part 4) outranks a spec constraint tweak (Part 2).
 
 Use this structure:
 
@@ -266,10 +275,28 @@ SPEC COACH REPORT
 Generated: <current date>
 Spec document: <spec_doc_url>
 Article document: <article_doc_url>
+[if no reference docs: Factual accuracy audit: skipped (no reference documents provided).]
 
-================================================================================
+EXECUTIVE SUMMARY
+
+  Constraint Saturation:  <HEALTHY / TIGHT / OVER-DETERMINED>
+  Spec Quality Score:     <weighted score>/<max>
+  Semantic Drift Risk:    <Low / Moderate / High>
+  Factual Accuracy:       <CLEAN / MINOR ISSUES / CORRECTIONS NEEDED>
+                          (or: Not audited — no reference documents provided)
+
+  Top actions for this iteration:
+    1. <highest-priority action drawn from Parts 1-4>
+    2. <second action>
+    3. <third action>
+
+======================================================================
 PART 1: CONSTRAINT SATURATION ANALYSIS
-================================================================================
+======================================================================
+
+SATURATION VERDICT: <HEALTHY / TIGHT / OVER-DETERMINED>
+  <1-2 sentence explanation. If OVER-DETERMINED, state clearly: "Iterative
+  auto-tune cycles will produce declining scores until constraints are reduced.">
 
 COVERAGE REQUIREMENTS
   Tier 1 (dedicated paragraph): <count> items
@@ -290,13 +317,11 @@ SCORING PASSES
 CONTRADICTORY CONSTRAINTS
   <List each pair of contradictory instructions with tab numbers, or "None detected">
 
-SATURATION VERDICT: <HEALTHY / TIGHT / OVER-DETERMINED>
-  <1-2 sentence explanation. If OVER-DETERMINED, state clearly: "Iterative
-  auto-tune cycles will produce declining scores until constraints are reduced.">
-
-================================================================================
+======================================================================
 PART 2: SPEC QUALITY SCORING
-================================================================================
+======================================================================
+
+COMPOSITE SCORE: <weighted score>/<max> (threshold: <threshold if defined>)
 
 SCORING RUBRIC
 <State the rubric used — whether it came from the spec or was inferred>
@@ -315,21 +340,29 @@ SCORES
 
   ...
 
-  COMPOSITE SCORE: <weighted score>/<max> (threshold: <threshold if defined>)
-
 BEYOND THE CEILING: PATH TO 11/10
 
-  1. <Recommendation title>
-     <Detailed explanation of what to add or change and why it would push past the current max>
+  ADDITIONS
 
-  2. <Recommendation title>
-     <Detailed explanation>
+    1. <Recommendation title>
+       <Detailed explanation of what to add and why it would push past the current max>
 
-  ...
+  REMOVALS AND RELAXATIONS
 
-================================================================================
+    1. <Recommendation title>
+       <Detailed explanation of what to remove or relax and what constraint budget it frees>
+
+  CONFLICTS
+
+    1. <Recommendation title>
+       <Detailed explanation of the conflict and how to resolve it>
+
+======================================================================
 PART 3: SEMANTIC DRIFT ANALYSIS
-================================================================================
+======================================================================
+
+COMPOSITE DRIFT ASSESSMENT: <Low / Moderate / High> (confidence: <Low / Moderate / High>)
+  Highest-risk mechanism: <which one and why>
 
 PRIMACY BIAS
   Probability: <Low / Moderate / High>
@@ -349,32 +382,29 @@ LOST IN THE MIDDLE
 TAB ORDERING EFFECTS
   Probability of suboptimal ordering: <Low / Moderate / High>
   Analysis: <reasoning about current order>
-  Recommended reorderings:
-    a) <proposed change and rationale>
-    b) <proposed change and rationale>
 
-COMPOSITE DRIFT ASSESSMENT
-  Overall drift probability: <Low / Moderate / High> (confidence: <Low / Moderate / High>)
-  Highest-risk mechanism: <which one and why>
-  Top 3 spec modifications to reduce drift:
-    1. <modification and rationale>
-    2. <modification and rationale>
-    3. <modification and rationale>
+TOP 3 SPEC MODIFICATIONS
+  1. <modification and rationale>
+  2. <modification and rationale>
+  3. <modification and rationale>
 
-================================================================================
+RECOMMENDED REORDERINGS
+  1. <proposed reordering and rationale, or "None">
+
+======================================================================
 PART 4: FACTUAL ACCURACY AUDIT
 (omit this section if no reference_docs were provided)
-================================================================================
+======================================================================
+
+ACCURACY VERDICT: <CLEAN / MINOR ISSUES / CORRECTIONS NEEDED>
+  <1-2 sentence summary. If CORRECTIONS NEEDED, list the spec tabs that
+  need changes so spec-auto-tune can act on them.>
+
+  Claims checked: <total>  Verified: <n>  Inaccuracies: <n>  Unsupported: <n>  Minor: <n>
 
 REFERENCE DOCUMENTS USED
   1. <doc description> (<url>)
   2. <doc description> (<url>)
-
-CLAIMS CHECKED: <total count>
-VERIFIED: <count>
-INACCURACIES: <count>
-UNSUPPORTED: <count>
-MINOR: <count>
 
 INACCURACIES (requires correction)
 
@@ -400,13 +430,9 @@ UNSUPPORTED CLAIMS (potential hallucinations)
 MINOR WORDING DIFFERENCES
   <List each difference briefly, or "None">
 
-ACCURACY VERDICT: <CLEAN / MINOR ISSUES / CORRECTIONS NEEDED>
-  <1-2 sentence summary. If CORRECTIONS NEEDED, list the spec tabs that
-  need changes so spec-auto-tune can act on them.>
-
-================================================================================
+======================================================================
 END OF REPORT
-================================================================================
+======================================================================
 ```
 
 Write the complete report text to `/tmp/spec_coach_report.txt`.

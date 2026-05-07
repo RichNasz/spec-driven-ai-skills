@@ -43,7 +43,10 @@ Ensure the Standard Article Doc has a "Generated Article" tab with content befor
 
 **Expected outcome:**
 - "Spec Coach" tab is created in the Standard Article Doc.
-- Report contains Parts 1, 2, and 3.
+- Report opens with EXECUTIVE SUMMARY showing all three verdicts (Constraint Saturation, Spec Quality Score, Semantic Drift Risk) and "Not audited" for Factual Accuracy, followed by Top actions list.
+- PART 1 opens with SATURATION VERDICT before the detail sections.
+- PART 2 opens with COMPOSITE SCORE before SCORING RUBRIC.
+- PART 3 opens with COMPOSITE DRIFT ASSESSMENT before the four mechanism analyses.
 - Part 4 is absent; the report header notes "Factual accuracy audit: skipped (no reference documents provided)."
 - Standard Spec Doc is unchanged.
 
@@ -64,13 +67,16 @@ Ensure the Standard Article Doc has a "Generated Article" tab with content befor
 
 **Expected outcome:**
 - "Spec Coach" tab created with all four PARTS.
-- PART 4 includes "REFERENCE DOCUMENTS USED", "CLAIMS CHECKED" (non-zero), and "ACCURACY VERDICT".
+- EXECUTIVE SUMMARY shows all four verdicts including a Factual Accuracy verdict.
+- PART 4 opens with ACCURACY VERDICT and inline claim counts before any detail.
+- PART 4 includes "REFERENCE DOCUMENTS USED" and "INACCURACIES".
 - The seeded inaccuracy (spec says "generally available", reference doc says "in preview") appears in PART 4 under INACCURACIES.
 - Reference Doc is unchanged.
 
 **Verification:**
 - Apply Spec Coach Report Structure Checklist (with reference docs variant).
-- In PART 4, confirm the seeded inaccuracy is listed under INACCURACIES with a SOURCE and CORRECTION.
+- In PART 4, confirm ACCURACY VERDICT is the first line, followed by claim counts, before REFERENCE DOCUMENTS USED.
+- Confirm the seeded inaccuracy is listed under INACCURACIES with a SOURCE and CORRECTION.
 - Apply Write-Target Fidelity Checklist (spec-coach, including reference doc).
 
 ---
@@ -105,13 +111,14 @@ Ensure the Standard Article Doc has a "Generated Article" tab with content befor
 ```
 
 **Expected outcome:**
-- SATURATION VERDICT in PART 1 is "OVER-DETERMINED".
+- SATURATION VERDICT is the first line of PART 1 and reads "OVER-DETERMINED".
+- The saturation explanation (immediately after SATURATION VERDICT) contains language about declining scores.
 - WORD BUDGET section shows utilization above 100%.
 - SCORING PASSES section shows 3 or more scoring-rewrite loops.
-- The saturation explanation contains language about declining scores.
+- EXECUTIVE SUMMARY Constraint Saturation line reads "OVER-DETERMINED".
 
 **Verification:**
-- Open the "Spec Coach" tab. Read PART 1.
+- Open the "Spec Coach" tab. Confirm SATURATION VERDICT is the first content line of PART 1.
 - Confirm SATURATION VERDICT line reads "OVER-DETERMINED".
 - Confirm word budget utilization percentage exceeds 100%.
 
@@ -147,10 +154,11 @@ Ensure the Standard Article Doc has a "Generated Article" tab with content befor
 
 **Expected outcome:**
 - The "Spec Coach" tab is created.
-- PART 2 SCORING RUBRIC section contains a note that the rubric was inferred (e.g., "rubric was inferred" or "no explicit rubric found in the spec").
+- COMPOSITE SCORE is the first line of PART 2.
+- SCORING RUBRIC section (following COMPOSITE SCORE) contains a note that the rubric was inferred (e.g., "rubric was inferred" or "no explicit rubric found in the spec").
 - Scores are still present — the skill does not fail when the rubric is absent.
 
 **Verification:**
-- Open the "Spec Coach" tab. Read the SCORING RUBRIC section in PART 2.
-- Confirm a note about inference is present.
+- Open the "Spec Coach" tab. Confirm COMPOSITE SCORE is the first content line of PART 2.
+- Read the SCORING RUBRIC section and confirm a note about inference is present.
 - Confirm COMPOSITE SCORE line is present (skill completed scoring despite the absent rubric).

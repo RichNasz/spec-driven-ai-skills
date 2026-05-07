@@ -9,7 +9,7 @@ Defines the shared YAML config file format accepted by all skills in this suite.
 ```
 spec_doc_url      required  Google Doc URL for the spec document
 article_doc_url   required  Google Doc URL for the generated article document
-dest_tab_name     optional  Name of the tab to write into (generate-article only; default: "Generated Article")
+dest_tab_name     optional  Name of the article tab (default: "Generated Article"). Used by generate-article as the write target and by spec-coach to locate the article tab for analysis.
 reference_docs    optional  List of reference documents for factual grounding (spec-coach, spec-auto-tune)
 ```
 

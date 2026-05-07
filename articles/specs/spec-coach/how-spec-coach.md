@@ -21,7 +21,7 @@
 
 **Step 0 — Validate inputs.** Resolve URLs from positional args or YAML config. Extract doc IDs. Enforce same-doc guard. Identify whether reference docs were provided.
 
-**Step 1 — Read all documents.** Read all spec tabs. Read all article tabs. If reference docs are present in config, read each one. All reads complete before any analysis begins.
+**Step 1 — Read all documents.** Issue the spec and article reads simultaneously in a single turn (two bash calls at once). For the article, use `--tab <dest_tab_name>` where `dest_tab_name` comes from the YAML config (default: `"Generated Article"`); if the result is empty, fall back to a full read and locate the tab by its header. If reference docs are present in config, issue all reference doc reads simultaneously in a single turn. All reads complete before any analysis begins.
 
 **Step 2 — Constraint Saturation Analysis (Report Part 1).** Count coverage requirements by tier. Estimate minimum word budget. Detect redundant scoring passes and contradictory constraints. Assign a saturation verdict: HEALTHY, TIGHT, or OVER-DETERMINED.
 
@@ -38,10 +38,17 @@
 ## Report Format Standards
 
 - Plain text only. No markdown characters.
-- ALL-CAPS section headers.
-- `===` separator lines between parts.
+- ALL-CAPS for part headers and machine-readable section anchors (SATURATION VERDICT, BEYOND THE CEILING, ADDITIONS, REMOVALS AND RELAXATIONS, CONFLICTS, COMPOSITE DRIFT ASSESSMENT, TOP 3 SPEC MODIFICATIONS, RECOMMENDED REORDERINGS, ACCURACY VERDICT, INACCURACIES, UNSUPPORTED CLAIMS). Mixed case for body labels (Evidence:, Affected tabs:, Probability:, Article says:, etc.).
+- `===` separator lines between parts (exactly 70 `=` characters — keep within Google Docs page width).
 - Each part is numbered (PART 1 through PART 4).
-- When Part 4 is omitted, include a note in the report header: "Factual accuracy audit: skipped (no reference documents provided)."
+- The report opens with an EXECUTIVE SUMMARY before PART 1. It shows all four verdicts and a ranked list of the top three actions for the iteration.
+- Within each part, the verdict or composite score appears first, before the supporting detail:
+  - PART 1: SATURATION VERDICT leads, then COVERAGE REQUIREMENTS / WORD BUDGET / SCORING PASSES / CONTRADICTORY CONSTRAINTS
+  - PART 2: COMPOSITE SCORE leads, then SCORING RUBRIC / SCORES / BEYOND THE CEILING
+  - PART 3: COMPOSITE DRIFT ASSESSMENT leads, then the four mechanism analyses, then TOP 3 SPEC MODIFICATIONS and RECOMMENDED REORDERINGS as named sections
+  - PART 4: ACCURACY VERDICT with inline claim counts leads, then REFERENCE DOCUMENTS USED / INACCURACIES / UNSUPPORTED CLAIMS / MINOR WORDING DIFFERENCES
+- BEYOND THE CEILING uses explicit ADDITIONS / REMOVALS AND RELAXATIONS / CONFLICTS sub-sections rather than a flat numbered list.
+- When Part 4 is omitted, include a note in the report header: "Factual accuracy audit: skipped (no reference documents provided)." The EXECUTIVE SUMMARY Factual Accuracy line shows "Not audited — no reference documents provided."
 
 ## Implementation Standards
 

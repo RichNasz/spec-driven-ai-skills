@@ -10,8 +10,8 @@ As a spec author, I want a structured evaluation of my spec's performance after 
 
 ## Functional Requirements
 
-1. Accept a spec doc URL and an article doc URL, either as positional arguments or from a YAML config file.
-2. Read all tabs from the spec doc and the generated article from the article doc.
+1. Accept a spec doc URL and an article doc URL, either as positional arguments or from a YAML config file. The optional `dest_tab_name` YAML key identifies the article tab to read (default: `"Generated Article"`).
+2. Read all tabs from the spec doc and the generated article tab from the article doc.
 3. Optionally accept reference documents for factual accuracy auditing.
 4. Analyze the article across four dimensions:
    - Constraint saturation: whether the spec's requirements are achievable within its word count

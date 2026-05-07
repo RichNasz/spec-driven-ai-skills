@@ -15,19 +15,20 @@ Apply after any spec-coach run. Open the "Spec Coach" tab in the article doc and
 - [ ] Line 2 begins with "Generated:"
 - [ ] "Spec document:" line is present and contains the spec doc URL
 - [ ] "Article document:" line is present and contains the article doc URL
-- [ ] Exactly four `================================================================================` separator lines are present
+- [ ] "EXECUTIVE SUMMARY" section is present before "PART 1"
+- [ ] Separator lines between parts use exactly 70 `=` characters (`======================================================================`)
 - [ ] "PART 1: CONSTRAINT SATURATION ANALYSIS" is present
 - [ ] "PART 2: SPEC QUALITY SCORING" is present
 - [ ] "PART 3: SEMANTIC DRIFT ANALYSIS" is present
-- [ ] "SATURATION VERDICT:" line is present and value is one of: HEALTHY, TIGHT, OVER-DETERMINED
-- [ ] "COMPOSITE SCORE:" line is present in PART 2
+- [ ] "SATURATION VERDICT:" is the first content line of PART 1
+- [ ] "COMPOSITE SCORE:" is the first content line of PART 2
 - [ ] No markdown characters are present (`#`, `*`, `` ` ``, or lines beginning with `-` used as bullets)
 
 **When reference docs were provided:**
 - [ ] "PART 4: FACTUAL ACCURACY AUDIT" is present
 - [ ] "REFERENCE DOCUMENTS USED" section lists the reference docs
-- [ ] "CLAIMS CHECKED:" line is present and non-zero
-- [ ] "ACCURACY VERDICT:" line is present
+- [ ] "ACCURACY VERDICT:" is the first content line of PART 4
+- [ ] "Claims checked:" appears within the ACCURACY VERDICT block with a non-zero count
 
 **When no reference docs were provided:**
 - [ ] "Factual accuracy audit: skipped (no reference documents provided)" appears in the report header
@@ -45,7 +46,7 @@ Apply after any spec-auto-tune run. Verify in the conversation output (the repor
 - [ ] "FACTUAL CORRECTIONS APPLIED" section header is present
 - [ ] "CONSTRAINT CHANGES APPLIED" section header is present
 - [ ] "OTHER CHANGES APPLIED" section header is present
-- [ ] "MANUAL STEPS REQUIRED" section header is present
+- [ ] "TAB REORDERS APPLIED" section header is present
 - [ ] "RECOMMENDATIONS NOT APPLIED" section header is present
 - [ ] "END OF REPORT" appears at the close
 

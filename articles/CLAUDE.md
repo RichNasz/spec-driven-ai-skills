@@ -58,7 +58,7 @@ Each skill has exactly one permitted write target:
 
 Persistent shell scripts for running test scenarios live in `tests/`. Each scenario has a `setup-<ID>.sh` and (where applicable) a `verify-<ID>.sh`. A shared `tests/lib.sh` provides fixture management and assert helpers.
 
-Run all scripts from the project root: `./tests/articles:generate-article/setup-G2.sh`
+Run all scripts from the project root: `./tests/generate-article/setup-G2.sh`
 
 For fixture reset utilities: `./tests/reset-article-doc.sh` and `./tests/reset-spec-doc.sh <fixture_key>`.
 

@@ -7,6 +7,6 @@
   },
   "homepage": "https://github.com/RichNasz/spec-driven-ai-skills",
   "repository": "https://github.com/RichNasz/spec-driven-ai-skills",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "tags": ["articles", "google-docs", "spec-driven", "content-generation", "gws"]
 }

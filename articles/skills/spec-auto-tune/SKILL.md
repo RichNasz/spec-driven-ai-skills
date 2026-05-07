@@ -89,25 +89,27 @@ Stop and report the error if IDs match. Never proceed until this passes.
 
 ### 1. Read all documents
 
-**Read all spec tabs (with content and endIndexes):**
+Issue the spec and article reads **simultaneously in a single turn** (two bash calls at once — do not wait for one before starting the other):
+
 ```bash
 python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <SPEC_ID>
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <ARTICLE_ID> --tab "Spec Coach"
 ```
 
-Save: tab index, title, tabId, endIndex, and full text for every spec tab. Each tab is delimited by a `=== TAB N: title | ID: tabId | endIndex=n ===` header line — parse these to build your tab registry.
+**Spec doc:** Save tab index, title, tabId, endIndex, and full text for every spec tab. Each tab is delimited by a `=== TAB N: title | ID: tabId | endIndex=n ===` header line — parse these to build your tab registry. Also save each tab's full text to `/tmp/tab_<tabId>_content.txt`. For any tab subsequently modified by a TAB_CONTENT write in Step 3, overwrite the same file with the updated content so the reorder step always has current content without a second API read.
 
-Also save each tab's full text to `/tmp/tab_<tabId>_content.txt` during this step. For any tab subsequently modified by a TAB_CONTENT write in Step 3, overwrite the same file with the updated content. This ensures the reorder step always uses current content without requiring a second API read.
-
-**Read the Spec Coach tab from the article doc:**
+**Article doc:** `--tab "Spec Coach"` returns only the Spec Coach tab, avoiding a full doc read. If the output is empty or contains only a warning, fall back to a full read and find the tab by its `=== TAB N: Spec Coach | ...` header:
 ```bash
 python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <ARTICLE_ID>
 ```
-
-Find the section starting with `=== TAB N: Spec Coach | ...` in the output and extract its text. If no such section exists, stop and tell the user: "No 'Spec Coach' tab found in the article document. Run /spec-coach first."
+If no Spec Coach tab is found in either case, stop and tell the user: "No 'Spec Coach' tab found in the article document. Run /spec-coach first."
 
 **Read reference docs (if any are listed in config):**
+Issue **all reference doc reads simultaneously in a single turn**:
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <REF_ID>
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <REF_DOC_1_ID>
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <REF_DOC_2_ID>
+# one call per reference doc, all in the same turn
 ```
 
 Read all reference docs before the analysis phase. You will need their content when evaluating whether factual additions are supportable.

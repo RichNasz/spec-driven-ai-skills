@@ -24,7 +24,7 @@ YAML config only — no positional argument form. See `common-how/how-yaml-confi
 
 **Step 0 — Validate config.** Load YAML. Extract and compare spec and article doc IDs. Enforce same-doc guard. Do not proceed until this passes.
 
-**Step 1 — Read all documents.** Read all spec tabs (capturing index, title, tabId, endIndex, and full text for each). Read the "Spec Coach" tab from the article doc — if absent, stop and tell the user to run spec-coach first. Read all reference docs if listed in config.
+**Step 1 — Read all documents.** Issue the spec and article reads simultaneously in a single turn (two bash calls at once). For the article, use `--tab "Spec Coach"` to read only that tab; if the result is empty, fall back to a full read and locate the tab by its header. If no Spec Coach tab exists, stop and tell the user to run spec-coach first. Issue all reference doc reads simultaneously in a single turn as well. Save all spec tab content (index, title, tabId, endIndex, full text) to named tmp files during this step for use by the reorder phase.
 
 **Step 2 — Read saturation state and categorize recommendations.** Extract the SATURATION VERDICT from Part 1 of the Spec Coach report. Read all four report parts and assign every distinct recommendation to one of these categories: TAB_CORRECTION, TAB_REMOVAL, TAB_CONTENT, TAB_REORDER, NEEDS_RESEARCH, or INSTRUCTIONAL_ONLY. Resolve NEEDS_RESEARCH items against reference doc content — mark as RESEARCHABLE if supportable, CANNOT_APPLY if not.
 
@@ -57,5 +57,5 @@ YAML config only — no positional argument form. See `common-how/how-yaml-confi
 - Write each tab's new content to a named tmp file before building the JSON payload.
 - Use clear-then-rewrite for all tab modifications — delete existing content, then insert new content.
 - Re-read all modified tabs after writes complete to confirm content matches intent.
-- The output report must account for every recommendation — applied, skipped with reason, or flagged as manual.
-- Manual step instructions must name the tab, the target position, and the exact UI actions needed in Google Docs.
+- The output report must account for every recommendation — applied or skipped with reason.
+- Skipped recommendation entries must state why the recommendation could not be applied and what information would be needed to apply it.

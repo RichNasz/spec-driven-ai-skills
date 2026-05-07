@@ -65,7 +65,7 @@ Unless otherwise noted, the Standard Spec Doc must be in its canonical state (no
 - At least one spec tab is modified.
 - Auto-tune report (in conversation) is well-formed.
 - FACTUAL CORRECTIONS APPLIED section reads "Skipped — no reference documents provided."
-- Any TAB_REORDER recommendations appear in MANUAL STEPS REQUIRED, not applied via API.
+- Any TAB_REORDER recommendations are applied automatically via the create-verify-delete pattern and appear in TAB REORDERS APPLIED in the report.
 - Article doc is unchanged.
 - After run: re-read modified spec tabs (skill confirms this internally); no discrepancy noted.
 
@@ -123,9 +123,9 @@ Unless otherwise noted, the Standard Spec Doc must be in its canonical state (no
 
 ---
 
-## A6 — Tab Reorder Becomes Manual Instruction
+## A6 — Tab Reorder Applied Automatically
 
-**Setup:** Standard Spec Doc. Standard Article Doc with a "Spec Coach" tab whose PART 3 (Semantic Drift) recommends moving one tab to a different position. (If the C2/C3 report does not contain a reorder recommendation, add one manually to the "Spec Coach" tab content before running.)
+**Setup:** Standard Spec Doc. Standard Article Doc with a "Spec Coach" tab whose PART 3 RECOMMENDED REORDERINGS section recommends moving one tab to a different position. (If the C2/C3 report does not contain a reorder recommendation, add one manually to the RECOMMENDED REORDERINGS section of the "Spec Coach" tab before running.)
 
 **Invocation:**
 ```
@@ -133,13 +133,15 @@ Unless otherwise noted, the Standard Spec Doc must be in its canonical state (no
 ```
 
 **Expected outcome:**
-- No `gws` call attempts to reorder tabs in the spec doc.
-- MANUAL STEPS REQUIRED section lists the reorder with: tab name, current position, target position, and step-by-step UI instructions for Google Docs.
-- Spec tab order is unchanged.
+- The reorder is applied via `gws` API calls using the create-verify-delete pattern: a replacement tab is created at the end of the doc with the same content, verified, and then the original is deleted.
+- TAB REORDERS APPLIED section in the report names the tab, its old and new positions, and confirms the create-verify-delete method was used.
+- Spec tab order reflects the recommendation; tab content is unchanged.
 
 **Verification:**
-- Open the Standard Spec Doc — tab order is the same as before the run.
-- Read MANUAL STEPS REQUIRED section — confirm it names the tab, positions, and UI steps.
+- Open the Standard Spec Doc — confirm the tab appears at its new position and its content matches the original.
+- Read TAB REORDERS APPLIED in the report — confirm it names the tab, positions, and method.
+- Apply Write-Target Fidelity Checklist (spec-auto-tune).
+- Reset Standard Spec Doc before running any other A-series test.
 
 ---
 

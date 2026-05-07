@@ -14,19 +14,19 @@ As a spec author, I want the Spec Coach recommendations applied to my spec autom
 2. Read the "Spec Coach" tab from the article doc. If no such tab exists, stop and instruct the user to run spec-coach first.
 3. Read all tabs from the spec doc.
 4. Read all reference documents if provided.
-5. Categorize every recommendation from the Spec Coach report and apply changes to the spec doc in priority order: factual corrections first, then constraint removals, then content additions.
+5. Categorize every recommendation from the Spec Coach report and apply changes to the spec doc in priority order: factual corrections first, then constraint removals, then content additions. The HEALTHY / TIGHT / OVER-DETERMINED saturation verdict from Spec Coach Part 1 gates whether additions are permitted: TIGHT requires a paired removal for each addition; OVER-DETERMINED blocks additions unless a constraint of equal or greater weight is simultaneously removed.
 6. Never add factual content that is not grounded in a provided reference document.
 7. Purely instructional improvements (rubric fixes, structural additions, checklist items) require no reference doc and must be applied freely.
-8. Tab reordering cannot be done via the API. Report all reordering recommendations as step-by-step manual instructions for the user.
+8. Tab reordering is performed automatically using a create-verify-delete pattern: new tabs are created in the desired order, each is verified, and only then are the original tabs deleted — content is never at risk.
 9. After writing, re-read all modified tabs to confirm changes took effect.
 10. Never modify the article doc or any reference doc.
-11. Output a full change summary — every change applied, every recommendation skipped, and every manual step required.
+11. Output a full change summary — every change applied and every recommendation skipped (with reason and what information would be needed to apply it).
 
 ## Success Criteria
 
 - All applicable Spec Coach recommendations are applied to the spec doc.
 - No factual content is added without a reference doc source.
-- Every recommendation is accounted for in the output report — applied, skipped, or flagged as manual.
-- Manual steps include enough detail for the user to complete them in Google Docs without guessing.
+- Every recommendation is accounted for in the output report — applied, or skipped with a clear reason and what would be needed to apply it.
+- Tab reordering is confirmed via re-read: new tabs appear at the correct positions and originals are gone.
 - The spec doc's content after the run matches what was intended, as confirmed by re-reading modified tabs.
 - The article doc and all reference docs are unchanged.

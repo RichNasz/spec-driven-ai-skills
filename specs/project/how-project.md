@@ -12,8 +12,8 @@
 **Structure**
 1. Constraint Saturation — the concept, the three verdicts (HEALTHY / TIGHT / OVER-DETERMINED), what each means for iteration
 2. Semantic Drift — the four mechanisms (primacy bias, recency bias, lost-in-the-middle, tab ordering effects) and why they matter for spec design
-3. The Self-Improving Spec Loop — how the evaluate-then-improve loop differs from output-iterating approaches
-4. What Makes This Different — the framing distinction: optimizing spec quality vs. output quality
+3. The Self-Improving Spec Loop — how the evaluate-then-improve loop differs from output-iterating approaches, including the role of author feedback as a human signal source alongside algorithmic analysis, PRESERVE markers, and the refined definition of Logic Compression
+4. What Makes This Different — the framing distinction: optimizing spec quality vs. output quality; the human-in-the-loop dimension
 
 **Standards**
 - Concept-level only. No skill-specific implementation details (those belong in skill category docs/).

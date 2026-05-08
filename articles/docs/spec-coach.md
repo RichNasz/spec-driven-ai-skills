@@ -42,9 +42,11 @@ reference_docs:                                                           # opti
 
 When `reference_docs` is absent or empty, the factual accuracy audit (Part 4) is skipped. The report header will say `"Factual accuracy audit: skipped (no reference documents provided)."` An empty list (`reference_docs: []`) behaves identically to omitting the key.
 
+When no "Author Feedback" tab exists in the article doc (or the tab is empty), Part 5 is skipped. The report header will say `"Author feedback analysis: skipped (no 'Author Feedback' tab found in article document)."` To use this feature, create a tab named "Author Feedback" in the article doc and write your freeform reactions to the generated article before running spec-coach.
+
 ## What you get
 
-A "Spec Coach" tab is created in the article doc (or overwritten if it already exists) containing a plain-text report with up to four parts:
+A "Spec Coach" tab is created in the article doc (or overwritten if it already exists) containing a plain-text report with up to five parts:
 
 **Part 1 — Constraint Saturation Analysis**
 Determines whether the spec's requirements are achievable within the target word count. Assigns a verdict of HEALTHY, TIGHT, or OVER-DETERMINED. See [concepts.md](../../docs/concepts.md#constraint-saturation) for a full explanation of the saturation model and what each verdict means for iteration.
@@ -57,6 +59,9 @@ Analyzes whether sequential tab processing caused the article to drift from the 
 
 **Part 4 — Factual Accuracy Audit** _(only when reference_docs provided)_
 Cross-references every verifiable factual claim in the article against the reference documents. Categorizes findings as VERIFIED, INACCURACY, UNSUPPORTED, or MINOR. Traces each inaccuracy to its source (spec instruction vs. model hallucination). Provides correction text and identifies which spec tab to fix when the spec caused the error.
+
+**Part 5 — Author Feedback Analysis** _(only when an "Author Feedback" tab exists in the article doc)_
+Translates the author's freeform reactions to the generated article into concrete spec recommendations. Positive feedback becomes PRESERVE markers that protect valued spec constraints from removal by auto-tune. Negative feedback becomes actionable spec change recommendations (add instruction, remove constraint, reorder tabs). When author feedback conflicts with a recommendation from Parts 1-4, the conflict is documented and the author's preference takes precedence.
 
 ## Saturation verdicts
 
@@ -75,6 +80,7 @@ See [concepts.md](../../docs/concepts.md#constraint-saturation) for full definit
 | Spec and article are the same doc | Stops immediately: `"Spec and article cannot be the same document."` |
 | Spec doc is read-only | The skill never calls `batchUpdate` on the spec doc |
 | Reference docs are read-only | The skill never writes to reference docs |
+| "Author Feedback" tab is read-only | The skill reads but never writes to the author's feedback |
 | All writes go to "Spec Coach" tab only | No other tab in the article doc is modified |
 
 ## Example
@@ -92,7 +98,7 @@ reference_docs:
 /articles:spec-coach my-article.yaml
 ```
 
-The skill reads both docs and the reference doc, runs all four analysis parts, and writes the full report to the "Spec Coach" tab in the article doc.
+The skill reads both docs and the reference doc, runs all applicable analysis parts (up to five), and writes the full report to the "Spec Coach" tab in the article doc.
 
 ## Notes
 

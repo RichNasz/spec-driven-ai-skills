@@ -44,17 +44,19 @@ The "Spec Coach" tab must already exist in the article doc. Run `/articles:spec-
 
 ## What you get
 
-The spec doc is updated in-place. Changes are applied tab by tab. A changes report is printed to the terminal (not written to any doc) with five sections:
+The spec doc is updated in-place. Changes are applied tab by tab. A changes report is printed to the terminal (not written to any doc) with the following sections:
 
-**CHANGES APPLIED** — every modification made to the spec, with the tab name, what changed, and why.
+**FACTUAL CORRECTIONS APPLIED** _(only when reference_docs provided)_ — factual corrections made to spec instructions, with the source doc and passage that grounded each correction.
 
-**TAB REORDERS APPLIED** — tab moves executed via the buffer-delete-recreate pattern, with source position, target position, and the Spec Coach rationale.
+**CONSTRAINT CHANGES APPLIED** — constraint removals or relaxations applied to the spec.
 
-**RECOMMENDATIONS NOT APPLIED** — items from the Spec Coach report that were skipped, with the reason (e.g., spec is OVER-DETERMINED and the addition would worsen saturation; or a NEEDS_RESEARCH item was skipped because no reference doc contained the required information).
+**AUTHOR FEEDBACK CHANGES APPLIED** _(only when Spec Coach report includes Part 5)_ — changes derived from the author's feedback on the generated article. Each entry shows the author's quoted feedback, the target tab, and what was changed.
 
-**CORRECTIONS APPLIED** _(only when reference_docs provided)_ — factual corrections made to spec instructions, with the source doc and passage that grounded each correction.
+**OTHER CHANGES APPLIED** — instructional and content changes applied.
 
-**ALREADY APPLIED** _(only on second run)_ — items that were already present from a previous run, confirming idempotence.
+**TAB REORDERS APPLIED** — tab moves executed via the create-verify-delete pattern, with source position, target position, and the Spec Coach rationale.
+
+**RECOMMENDATIONS NOT APPLIED** — items from the Spec Coach report that were skipped, with the reason. This includes: OVER-DETERMINED additions, NEEDS_RESEARCH items without reference doc support, and TAB_REMOVAL recommendations blocked by PRESERVE markers from author feedback (with the author's quoted feedback explaining why the constraint was preserved).
 
 ## Change categories
 

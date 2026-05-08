@@ -26,11 +26,11 @@ YAML config only — no positional argument form. See `common-how/how-yaml-confi
 
 **Step 1 — Read all documents.** Issue the spec and article reads simultaneously in a single turn (two bash calls at once). For the article, use `--tab "Spec Coach"` to read only that tab; if the result is empty, fall back to a full read and locate the tab by its header. If no Spec Coach tab exists, stop and tell the user to run spec-coach first. Issue all reference doc reads simultaneously in a single turn as well. Save all spec tab content (index, title, tabId, endIndex, full text) to named tmp files during this step for use by the reorder phase.
 
-**Step 2 — Read saturation state and categorize recommendations.** Extract the SATURATION VERDICT from Part 1 of the Spec Coach report. Read all four report parts and assign every distinct recommendation to one of these categories: TAB_CORRECTION, TAB_REMOVAL, TAB_CONTENT, TAB_REORDER, NEEDS_RESEARCH, or INSTRUCTIONAL_ONLY. Resolve NEEDS_RESEARCH items against reference doc content — mark as RESEARCHABLE if supportable, CANNOT_APPLY if not.
+**Step 2 — Read saturation state and categorize recommendations.** Extract the SATURATION VERDICT from Part 1 of the Spec Coach report. Read all five report parts (Parts 4 and 5 may be absent) and assign every distinct recommendation to one of these categories: TAB_CORRECTION, TAB_REMOVAL, TAB_CONTENT, TAB_REORDER, NEEDS_RESEARCH, or INSTRUCTIONAL_ONLY. When Part 5 is present, also extract the PRESERVE marker list — these identify spec constraints the author explicitly values. Resolve NEEDS_RESEARCH items against reference doc content — mark as RESEARCHABLE if supportable, CANNOT_APPLY if not.
 
-**Step 3 — Apply changes in priority order.** Apply TAB_CORRECTION first, then TAB_REMOVAL, then TAB_CONTENT / INSTRUCTIONAL_ONLY / RESEARCHABLE. The saturation state governs additions: TIGHT requires a paired removal for each addition; OVER-DETERMINED blocks additions unless they simultaneously remove a constraint of equal or greater weight. Apply changes one tab at a time. Never assume a previously captured endIndex is still valid after any write.
+**Step 3 — Apply changes in priority order.** Apply TAB_CORRECTION first, then TAB_REMOVAL, then TAB_CONTENT / INSTRUCTIONAL_ONLY / RESEARCHABLE. The saturation state governs additions: TIGHT requires a paired removal for each addition; OVER-DETERMINED blocks additions unless they simultaneously remove a constraint of equal or greater weight. **PRESERVE gate:** Before applying any TAB_REMOVAL, check whether the target constraint is marked as PRESERVE in Part 5. If so, skip the removal and document the reason ("Blocked by author feedback — author explicitly values what this constraint produces"). Apply changes one tab at a time. Never assume a previously captured endIndex is still valid after any write.
 
-**Step 4 — Compose the change summary report.** Produce a structured plain-text report covering: factual corrections applied, constraint changes applied, other changes applied, tab reorders applied (via create-verify-delete), and recommendations not applied. Write to a tmp file. Also print the full report to the terminal.
+**Step 4 — Compose the change summary report.** Produce a structured plain-text report covering: factual corrections applied, constraint changes applied, author feedback changes applied (from Part 5 recommendations), other changes applied, tab reorders applied (via create-verify-delete), recommendations not applied (including PRESERVE-blocked removals with the author's quoted feedback). Write to a tmp file. Also print the full report to the terminal.
 
 **Step 5 — Confirm spec changes.** Re-read all modified tabs and verify their content matches what was intended. Report any discrepancy explicitly — never fail silently.
 
@@ -50,6 +50,14 @@ YAML config only — no positional argument form. See `common-how/how-yaml-confi
 - HEALTHY: Apply additions and removals normally.
 - TIGHT: Apply removals before additions. Skip any addition not paired with a removal in the same report.
 - OVER-DETERMINED: Prioritize removals. Block additions unless they simultaneously remove a constraint of equal or greater weight. Document all skipped additions.
+
+## PRESERVE Gate
+
+When Part 5 of the Spec Coach report is present and contains PRESERVE markers, these gate TAB_REMOVAL recommendations from all parts:
+
+- Before applying any TAB_REMOVAL, check whether the target spec constraint is listed under POSITIVE OBSERVATIONS with a PRESERVE status in Part 5.
+- If the constraint is PRESERVE-marked, skip the removal. Document it in RECOMMENDATIONS NOT APPLIED with: the original recommendation source (Part N), the author's quoted feedback from Part 5, and the resolution ("Author preference takes precedence").
+- PRESERVE markers do not block TAB_CONTENT, TAB_CORRECTION, or TAB_REORDER operations — only removals. An author who says "I like X" is protecting X from deletion, not from improvement.
 
 ## Implementation Standards
 

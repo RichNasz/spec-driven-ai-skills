@@ -18,6 +18,9 @@ These two claims — close the loop on the spec, not the output; and remove rath
 ```
 Spec Doc ──/generate-article──▶ Article Doc
                                       │
+                              Author reviews article
+                              (optional "Author Feedback" tab)
+                                      │
                               /spec-coach
                                       │
                                       ▼
@@ -33,13 +36,15 @@ Three skills. One loop.
 
 `/generate-article` reads the spec as a sequential prompt chain — each tab in the Google Doc is a refinement pass applied in order. The result is written to a named tab in the article doc.
 
-`/spec-coach` evaluates both documents and produces a structured report. The critical distinction: Spec Coach is not primarily asking "is this a good article?" It is asking "is this a well-designed spec?" The report has four parts: a constraint saturation analysis (is the spec over-constrained relative to the output budget?), a quality score using the rubric the spec itself defines, a semantic drift analysis (did the tab ordering or instruction density cause the output to drift from its subject?), and — when reference documents are provided — a factual accuracy audit. The feedback is about the spec's design, not the article's prose.
+`/spec-coach` evaluates both documents and produces a structured report. The critical distinction: Spec Coach is not primarily asking "is this a good article?" It is asking "is this a well-designed spec?" The report has up to five parts: a constraint saturation analysis (is the spec over-constrained relative to the output budget?), a quality score using the rubric the spec itself defines, a semantic drift analysis (did the tab ordering or instruction density cause the output to drift from its subject?), a factual accuracy audit (when reference documents are provided), and an author feedback analysis (when the author writes reactions in an "Author Feedback" tab in the article doc). The feedback is about the spec's design, not the article's prose — and the author's subjective reactions are translated into concrete spec recommendations, not article edits.
 
-`/spec-auto-tune` reads the Spec Coach report and applies improvements directly to the spec. It prioritizes factual corrections first, then constraint removals, then content additions. Changes that add new constraints are blocked when the spec is already tight. The result is an improved spec — not a revised article.
+`/spec-auto-tune` reads the Spec Coach report and applies improvements directly to the spec. It prioritizes factual corrections first, then constraint removals, then content additions. Changes that add new constraints are blocked when the spec is already tight. When the author has marked constraints as valuable through their feedback, auto-tune protects those constraints from removal — even when algorithmic analysis recommends simplification. The result is an improved spec — not a revised article.
 
 Then regenerate and repeat. Each cycle leaves a measurably better spec. The article improves as a consequence.
 
-Most AI writing tools (commercial and academic) iterate on output. Self-Refine, Reflexion, and similar frameworks generate output, critique it, and revise the output. This pipeline generates output, critiques the instruction set that produced it, and revises the instruction set. The article is a signal. The spec is the conclusion.
+The pipeline was originally purely algorithmic. The author feedback loop adds a human signal source. The author is not editing the article — they are providing signal about spec quality, and that signal is translated into the same structured recommendations the algorithmic analysis produces. When human judgment conflicts with algorithmic recommendations, the human wins. This is consistent with the pipeline's purpose: it exists to serve the author's vision, and the reductive protocol is a means, not an end. An author who says "I like this" is identifying a load-bearing constraint that the algorithm should not remove.
+
+Most AI writing tools (commercial and academic) iterate on output. Self-Refine, Reflexion, and similar frameworks generate output, critique it, and revise the output. This pipeline generates output, critiques the instruction set that produced it, and revises the instruction set — and now incorporates the author's own reactions into that critique. The article is a signal. The author's feedback is a signal. The spec is the conclusion.
 
 
 ## Three Technical Concepts
@@ -71,6 +76,8 @@ The pipeline closes its feedback loop on the spec, not the output. This is the p
 PromptWizard (Microsoft Research), SIPDO, FIPO, and similar tools implement generate → critique → improve cycles. Their framing is: improve the prompt to produce better outputs. The spec is a means; the output is the goal. Spec Coach's framing is different: the spec is a design artifact with its own quality dimensions — saturation level, drift risk, constraint contradictions, factual accuracy, tab ordering effects. A spec that reaches Logic Compression (where removing any constraint would degrade the output) is the goal. The article is evidence that you've reached it, not the goal itself.
 
 In practice, this framing changes what gets improved. A tool optimizing for output quality will add instructions that nudge the output toward the target. A tool optimizing for spec quality will remove constraints that are redundant, resolve contradictions, and reorder tabs to reduce drift risk — changes that may produce a shorter, simpler spec that generates better output across regenerations.
+
+The author feedback loop adds a dimension the algorithmic analysis cannot provide: the author's subjective judgment about what matters. Algorithmic analysis can detect that a constraint is structurally redundant; only the author can say whether removing it would lose something they value. When the author marks a constraint as worth preserving, that constraint becomes load-bearing by definition — not because of structural analysis, but because the author said so. This refines the definition of Logic Compression: a spec reaches it when removing any constraint would degrade the output *or* violate the author's expressed values.
 
 
 ## The Philosophical Roots

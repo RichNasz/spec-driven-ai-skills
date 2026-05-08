@@ -184,3 +184,47 @@ If the standard Spec Coach report does not naturally contain a NEEDS_RESEARCH it
 **Verification:**
 - Read RECOMMENDATIONS NOT APPLIED section — confirm the NEEDS_RESEARCH item is listed with a reason.
 - Open the spec tab that would have been affected — confirm it is unchanged.
+
+---
+
+## A9 — Author Feedback Recommendations Applied
+
+**Setup:** Standard Spec Doc (canonical state). Standard Article Doc with a "Spec Coach" tab whose PART 5 (Author Feedback Analysis) contains at least one SPEC CHANGE RECOMMENDATION with category INSTRUCTIONAL_ONLY or TAB_CONTENT targeting a specific spec tab. To produce this: create an "Author Feedback" tab in the article doc with feedback such as "The middle section dragged — too many bullet points. The security section used too much jargon." Then run spec-coach (C8) to generate a report with Part 5. `specs/fixtures/config-standard.yaml`.
+
+**Invocation:**
+```
+/spec-auto-tune specs/fixtures/config-standard.yaml
+```
+
+**Expected outcome:**
+- At least one spec tab is modified based on a Part 5 recommendation.
+- AUTHOR FEEDBACK CHANGES APPLIED section in the report lists the change with the author's quoted feedback, the target tab, and what was changed.
+- Article doc is unchanged (including the "Author Feedback" tab).
+
+**Verification:**
+- Read AUTHOR FEEDBACK CHANGES APPLIED section — confirm at least one entry.
+- Open the modified spec tab — confirm the change is present.
+- Apply Write-Target Fidelity Checklist (spec-auto-tune).
+- Reset Standard Spec Doc before running any other A-series test.
+
+---
+
+## A10 — PRESERVE Marker Blocks TAB_REMOVAL
+
+**Setup:** Standard Spec Doc (canonical state). Standard Article Doc with a "Spec Coach" tab whose PART 2 recommends removing or relaxing a specific spec constraint (TAB_REMOVAL) AND whose PART 5 contains a POSITIVE OBSERVATIONS entry with PRESERVE status for the same constraint. To produce this: create an "Author Feedback" tab with feedback that explicitly praises the aspect Part 2 wants to remove (e.g., "I love the dedicated paragraphs for each topic — this is essential"). Then run spec-coach (C11) to generate a report with the conflict. `specs/fixtures/config-standard.yaml`.
+
+**Invocation:**
+```
+/spec-auto-tune specs/fixtures/config-standard.yaml
+```
+
+**Expected outcome:**
+- The TAB_REMOVAL recommendation from Part 2 is NOT applied to the spec.
+- RECOMMENDATIONS NOT APPLIED section lists the blocked removal with reason referencing "author feedback" or "PRESERVE" and includes the author's quoted feedback.
+- The spec tab that would have been modified retains its original content.
+
+**Verification:**
+- Read RECOMMENDATIONS NOT APPLIED section — confirm at least one entry with "PRESERVE" or "author feedback" in the reason and the author's quoted feedback.
+- Open the spec tab that was targeted — confirm it is unchanged from canonical state.
+- Apply Write-Target Fidelity Checklist (spec-auto-tune).
+- Reset Standard Spec Doc before running any other A-series test.

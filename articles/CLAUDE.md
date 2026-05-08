@@ -51,8 +51,12 @@ Internal specs in `specs/` follow a three-file naming pattern per skill:
 Each skill has exactly one permitted write target:
 
 - `/articles:generate-article` → named tab in the article doc only; spec doc is read-only
-- `/articles:spec-coach` → "Spec Coach" tab in the article doc only; spec doc and reference docs are read-only
+- `/articles:spec-coach` → "Spec Coach" tab in the article doc only; spec doc, reference docs, and "Author Feedback" tab are read-only
 - `/articles:spec-auto-tune` → spec doc tabs only; article doc and reference docs are read-only
+
+## Author Feedback
+
+Users can provide feedback on a generated article by creating an "Author Feedback" tab in the article doc. Spec-coach reads this tab (when present) and translates the author's freeform reactions into Part 5 of the Spec Coach report — concrete spec recommendations and PRESERVE markers. The tab name is fixed and discovered by name, not configured via YAML. When absent, Part 5 is skipped.
 
 ## Test scripts
 

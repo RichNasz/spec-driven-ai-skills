@@ -34,6 +34,20 @@ Apply after any spec-coach run. Open the "Spec Coach" tab in the article doc and
 - [ ] "Factual accuracy audit: skipped (no reference documents provided)" appears in the report header
 - [ ] No "PART 4" section is present
 
+**When an "Author Feedback" tab was present:**
+- [ ] "PART 5: AUTHOR FEEDBACK ANALYSIS" is present
+- [ ] "FEEDBACK SOURCE:" line references "Author Feedback" tab
+- [ ] "POSITIVE OBSERVATIONS" section is present (may be empty if no positive feedback)
+- [ ] "SPEC CHANGE RECOMMENDATIONS" section is present (may be empty if no negative feedback)
+- [ ] "CONFLICTS WITH OTHER PARTS" section is present
+- [ ] Each POSITIVE OBSERVATIONS entry includes "Author says:", "Spec source:", and "Status: PRESERVE"
+- [ ] Each SPEC CHANGE RECOMMENDATIONS entry includes "Author says:", "Category:", "Target:", "Change:", and "Rationale:"
+- [ ] EXECUTIVE SUMMARY "Author Feedback:" line shows item counts
+
+**When no "Author Feedback" tab was present:**
+- [ ] "Author feedback analysis: skipped (no 'Author Feedback' tab found in article document)" appears in the report header
+- [ ] No "PART 5" section is present
+
 ---
 
 ## Checklist: Spec Auto-Tune Report Structure
@@ -45,6 +59,7 @@ Apply after any spec-auto-tune run. Verify in the conversation output (the repor
 - [ ] "Saturation state:" line is present and value is one of: HEALTHY, TIGHT, OVER-DETERMINED
 - [ ] "FACTUAL CORRECTIONS APPLIED" section header is present
 - [ ] "CONSTRAINT CHANGES APPLIED" section header is present
+- [ ] "AUTHOR FEEDBACK CHANGES APPLIED" section header is present
 - [ ] "OTHER CHANGES APPLIED" section header is present
 - [ ] "TAB REORDERS APPLIED" section header is present
 - [ ] "RECOMMENDATIONS NOT APPLIED" section header is present

@@ -45,9 +45,13 @@ Most AI generation tools iterate on output: generate, critique the output, revis
 
 The pipeline generates output, evaluates how well the spec performed in producing it, then applies improvements to the spec — not the output. The next generation run starts from a better spec. The output improves as a consequence.
 
+The loop combines two signal sources. Algorithmic analysis (constraint saturation, scoring, drift, factual accuracy) detects structural problems the author may not see. Author feedback captures subjective reactions the algorithm cannot assess — what felt right, what felt off, what was missing. Both are translated into the same structured recommendations. When they conflict, the author's judgment takes precedence: the pipeline exists to serve the author's vision.
+
+Positive author feedback produces PRESERVE markers that protect valued spec constraints from removal. An author who says "I like this" is identifying a load-bearing constraint. Negative feedback is translated into concrete spec changes using the same categories as algorithmic recommendations. The author is not editing the output — they are providing signal about spec quality.
+
 This framing changes what gets improved. A tool optimizing for output quality adds instructions that nudge the output toward the target. A tool optimizing for spec quality removes constraints that are redundant, resolves contradictions, and reorders sections to reduce drift risk. The result is a shorter, simpler spec that generates better output across regenerations — not a longer, more prescriptive one.
 
-The goal state is **Logic Compression**: a spec reaches Logic Compression when removing any constraint would degrade the output. That is when the spec is ready.
+The goal state is **Logic Compression**: a spec reaches Logic Compression when removing any constraint would degrade the output or violate the author's expressed values. That is when the spec is ready.
 
 ---
 
@@ -56,6 +60,8 @@ The goal state is **Logic Compression**: a spec reaches Logic Compression when r
 Most AI writing and generation tools — commercial and academic — frame the problem as: improve the output. Self-Refine, Reflexion, PromptWizard, SIPDO, and similar frameworks implement generate → critique → improve cycles targeted at the output. The spec is a means; the output is the goal.
 
 This project's framing is different: **the spec is a design artifact with its own quality dimensions** — saturation level, drift risk, constraint contradictions, factual accuracy, structural ordering. Evaluating whether the spec itself is well-designed is distinct from evaluating whether the output is good. Tools that conflate the two converge on longer, more prescriptive specs. This pipeline converges on shorter ones.
+
+A second distinction: most AI workflow tools are fully algorithmic. This pipeline includes the author's subjective judgment as a first-class signal source. The author reviews the generated output, records what they like and dislike, and that feedback is translated into spec improvements alongside the algorithmic analysis. Human judgment and algorithmic analysis are complementary — and when they conflict, the human wins.
 
 In practice:
 

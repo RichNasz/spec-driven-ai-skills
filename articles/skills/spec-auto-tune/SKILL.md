@@ -123,11 +123,12 @@ Find the SATURATION VERDICT line in the Spec Coach report. Record whether the sp
 - OVER-DETERMINED: Prioritize removals and relaxations. Do not apply any recommendation that increases the constraint count unless it simultaneously removes at least one existing constraint of equal or greater weight. Document all skipped additions.
 
 **2b. Categorize recommendations from all report parts.**
-Read all four parts of the Spec Coach report and extract every distinct recommendation:
+Read all parts of the Spec Coach report (up to five; Parts 4 and 5 may be absent) and extract every distinct recommendation:
 - PART 1 (Constraint Saturation Analysis): Scoring pass reductions, contradictory constraint resolutions
 - PART 2 (Spec Quality Scoring — "BEYOND THE CEILING" section): Quality improvements, organized as ADDITIONS, REMOVALS AND RELAXATIONS, and CONFLICTS
 - PART 3 (Semantic Drift Analysis — "Top 3 spec modifications" and "Recommended reorderings"): Drift reduction changes
 - PART 4 (Factual Accuracy Audit — if present): Spec corrections for inaccuracies and hallucination-causing instructions
+- PART 5 (Author Feedback Analysis — if present): Author-driven spec changes under SPEC CHANGE RECOMMENDATIONS; PRESERVE markers under POSITIVE OBSERVATIONS that gate TAB_REMOVAL from other parts
 
 For each distinct recommendation, assign a category:
 
@@ -170,6 +171,8 @@ After categorizing, assess each NEEDS_RESEARCH item against the reference doc co
 ### 3. Apply changes in priority order
 
 Apply changes in this order: TAB_CORRECTION first, then TAB_REMOVAL, then TAB_CONTENT / INSTRUCTIONAL_ONLY / RESEARCHABLE. This ordering matters — corrections fix factual errors that could propagate if left in place, removals free constraint budget before additions consume it.
+
+**PRESERVE gate (when Part 5 is present):** Before applying any TAB_REMOVAL, check whether the target constraint is listed under POSITIVE OBSERVATIONS with PRESERVE status in Part 5. If so, skip the removal and document the reason: "Blocked by author feedback — author explicitly values what this constraint produces (see Part 5, item N)." PRESERVE markers do not block TAB_CONTENT, TAB_CORRECTION, or TAB_REORDER operations — only removals.
 
 For each applicable recommendation, determine the most precise write operation:
 
@@ -257,6 +260,21 @@ CONSTRAINT CHANGES APPLIED
   2. ...
 
 ================================================================================
+AUTHOR FEEDBACK CHANGES APPLIED
+================================================================================
+
+  <N> changes applied from author feedback (Spec Coach Part 5).
+  (If no Part 5 in the Spec Coach report: "Skipped — no author feedback analysis in Spec Coach report.")
+
+  1. <Tab name> (Tab ID: <tabId>)
+     Author says: "<quoted feedback>"
+     Category: <TAB_CONTENT / TAB_REMOVAL / INSTRUCTIONAL_ONLY / etc.>
+     Change: <what was added, removed, or restructured>
+     Rationale: <how this addresses the author's concern>
+
+  2. ...
+
+================================================================================
 OTHER CHANGES APPLIED
 ================================================================================
 
@@ -318,9 +336,10 @@ Find each modified tab by its `=== TAB N: title | ID: tabId | endIndex=n ===` he
 - endIndexes change after each write — always use the endIndex captured in Step 1 before the first write to that tab; re-read via `read_doc.py` if you need to make additional changes to the same tab
 - Save each tab's text to `/tmp/tab_<tabId>_content.txt` during Step 1. Overwrite after any TAB_CONTENT write so the reorder step has current content without requiring a second API read.
 - `insertionIndex` is NOT a valid field in `addDocumentTab` — the API rejects it. Tab position is controlled entirely by creation order.
-- The Spec Coach report has up to four parts. Recommendation sources by priority: PART 4 (Factual Accuracy — corrections) first, PART 1 (Constraint Saturation — removals), PART 2 ("BEYOND THE CEILING" — quality improvements), PART 3 ("Top 3 spec modifications" — drift fixes)
+- The Spec Coach report has up to five parts. Recommendation sources by priority: PART 4 (Factual Accuracy — corrections) first, PART 1 (Constraint Saturation — removals), PART 5 (Author Feedback — changes and PRESERVE markers), PART 2 ("BEYOND THE CEILING" — quality improvements), PART 3 ("Top 3 spec modifications" — drift fixes)
 - TAB_CORRECTION changes from PART 4 are highest confidence — they include exact text, source tracing, and replacement wording. Apply these first without hesitation
-- TAB_REMOVAL changes should be applied before TAB_CONTENT additions to maintain constraint budget
+- TAB_REMOVAL changes should be applied before TAB_CONTENT additions to maintain constraint budget — but respect PRESERVE markers from Part 5 that block specific removals
 - When the saturation verdict is TIGHT or OVER-DETERMINED, enforce a one-in-one-out rule: do not add a new constraint without removing or relaxing an existing one
+- When Part 5 contains PRESERVE markers, check each TAB_REMOVAL against the PRESERVE list before applying. A PRESERVE-blocked removal is documented in RECOMMENDATIONS NOT APPLIED with the author's quoted feedback
 - Purely instructional improvements (rubric fixes, transition examples, checklist additions, structural requirements) require no reference doc research — apply them freely based on the Spec Coach analysis alone
 - If the Spec Coach report references changes already applied (e.g., a recommendation from a prior run that is already in the spec), skip them — check the current spec tab content before applying

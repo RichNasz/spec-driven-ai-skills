@@ -17,11 +17,11 @@ tests/
     setup-G1.sh … setup-G7.sh
     verify-G2.sh … verify-G7.sh   # G1 has no verify script (error-path test)
   spec-coach/
-    setup-C1.sh … setup-C7.sh
-    verify-C2.sh … verify-C7.sh   # C1 has no verify script (error-path test)
+    setup-C1.sh … setup-C11.sh
+    verify-C2.sh … verify-C11.sh  # C1 has no verify script (error-path test)
   spec-auto-tune/
-    setup-A1.sh … setup-A8.sh
-    verify-A3.sh … verify-A8.sh   # A1, A2 have no verify scripts (error-path tests)
+    setup-A1.sh … setup-A10.sh
+    verify-A3.sh … verify-A10.sh  # A1, A2 have no verify scripts (error-path tests)
   pipeline/
     setup-P1.sh, setup-P2.sh, setup-P3.sh
     verify-P1-step1.sh, verify-P1-step2.sh, verify-P1-step3.sh

@@ -47,18 +47,26 @@ reference_docs:
 
 ```bash
 /articles:generate-article my-article.yaml   # write the article
+
+# Optional: review the article in Google Docs and create an "Author Feedback"
+# tab with your reactions (what you liked, what felt off, what was missing)
+
 /articles:spec-coach my-article.yaml         # evaluate spec and article
 /articles:spec-auto-tune my-article.yaml     # apply improvements to the spec
 ```
 
 Then regenerate and repeat. The Spec Coach report tells you when to stop.
 
+### Author feedback
+
+After generating an article, you can add your own feedback to the flywheel. Create a tab named "Author Feedback" in the article doc and write your freeform reactions — what you liked, what didn't work, what was missing. Spec-coach reads this tab and translates your feedback into Part 5 of its report: positive reactions become PRESERVE markers (protecting spec constraints you value from removal), and negative reactions become concrete spec change recommendations. This feedback is entirely optional — when the tab is absent, Part 5 is skipped.
+
 ## Skills
 
 | Skill | What it does | Docs |
 |---|---|---|
 | `/articles:generate-article` | Reads spec tabs as a prompt chain; writes article to a named tab in the destination doc | [docs/generate-article.md](docs/generate-article.md) |
-| `/articles:spec-coach` | Scores the article against the spec's own rubric; analyzes semantic drift; audits factual accuracy; writes report to "Spec Coach" tab | [docs/spec-coach.md](docs/spec-coach.md) |
+| `/articles:spec-coach` | Scores the article against the spec's own rubric; analyzes semantic drift; audits factual accuracy; incorporates author feedback; writes report to "Spec Coach" tab | [docs/spec-coach.md](docs/spec-coach.md) |
 | `/articles:spec-auto-tune` | Reads the Spec Coach report; applies improvements to the spec doc; reports changes and any required manual steps | [docs/spec-auto-tune.md](docs/spec-auto-tune.md) |
 
 ## Repo layout

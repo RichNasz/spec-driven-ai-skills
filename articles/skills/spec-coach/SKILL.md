@@ -41,6 +41,7 @@ Extract the document ID from a URL like `https://docs.google.com/document/d/<DOC
 1. **Spec doc is read-only.** Never call `batchUpdate` on the spec document ID. Only `documents.get` is permitted against it.
 2. **Spec and article must be different docs.** Extract the document ID from both URLs and compare them. If they are identical, stop immediately and tell the user: "Spec and article cannot be the same document."
 3. **All writes go to the "Spec Coach" tab only.** The only `batchUpdate` calls permitted target the article document, and only to create, clear, or write the "Spec Coach" tab.
+4. **The "Author Feedback" tab is read-only.** Never write to the "Author Feedback" tab. It is authored by the human user and only read by this skill.
 
 ## Step-by-Step Process
 
@@ -96,14 +97,15 @@ Stop and report the error if IDs match. Never proceed to Step 1 until this passe
 
 ### 1. Read all documents in parallel
 
-Issue the spec and article reads **simultaneously in a single turn** (two bash calls at once — do not wait for one before starting the other):
+Issue the spec, article, and author feedback reads **simultaneously in a single turn** (three bash calls at once — do not wait for one before starting the others):
 
 ```bash
 python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <SPEC_ID>
 python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <ARTICLE_ID> --tab "<DEST_TAB_NAME>"
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <ARTICLE_ID> --tab "Author Feedback"
 ```
 
-Save both outputs. You need every spec tab for scoring and drift analysis. For the article, `--tab <DEST_TAB_NAME>` (resolved from `dest_tab_name` in the YAML config, defaulting to `"Generated Article"`) returns only the tab needed for analysis, avoiding a full doc read.
+Save all outputs. You need every spec tab for scoring and drift analysis. For the article, `--tab <DEST_TAB_NAME>` (resolved from `dest_tab_name` in the YAML config, defaulting to `"Generated Article"`) returns only the tab needed for analysis, avoiding a full doc read. For author feedback, if the `--tab "Author Feedback"` read returns no output (tab does not exist or is empty), record that no author feedback was provided. Do not fail — Part 5 will be skipped.
 
 **If `--tab <DEST_TAB_NAME>` returns no tab block** (output is empty or contains only a warning), the article doc uses a different tab name. Fall back by issuing a full read without `--tab`:
 ```bash
@@ -260,9 +262,37 @@ For each INACCURACY or high-risk UNSUPPORTED finding, provide:
 - What it should say instead, based on reference docs
 - Whether the spec needs a correction (if the spec caused the issue, name the tab and the specific text to change)
 
+### 5b. Author Feedback Analysis (requires "Author Feedback" tab)
+
+This step produces PART 5 of the Spec Coach report. Skip this step entirely if no "Author Feedback" tab was found in the article doc (the Step 1 read returned no output). When skipped, note in the report header: "Author feedback analysis: skipped (no 'Author Feedback' tab found in article document)."
+
+The "Author Feedback" tab contains the author's freeform reactions to the generated article. This step translates those subjective reactions into concrete spec recommendations and preservation markers.
+
+**5b-a. Parse feedback into discrete observations.**
+Break the freeform text into individual feedback items. Each item is a distinct reaction, preference, or observation the author expressed. Preserve the author's language in quotes when referencing their feedback.
+
+**5b-b. Classify each observation.**
+For each feedback item, determine:
+- Whether it is **positive** (something the author likes that should be preserved in the spec) or **negative** (something the author dislikes that should be changed in the spec)
+- Which spec tab(s) most likely control the aspect of the article the author is reacting to
+- Whether the feedback is about content, structure, tone, pacing, depth, or coverage
+
+**5b-c. Translate negative observations into spec recommendations.**
+For each negative observation, produce a concrete recommendation using the same category system as Parts 1-4. Each recommendation must:
+- Name the specific spec tab to modify
+- Specify the change type: TAB_CONTENT, TAB_REMOVAL, TAB_REORDER, INSTRUCTIONAL_ONLY, or NEEDS_RESEARCH
+- Explain the specific change to make
+- Explain how the change addresses the author's concern
+
+**5b-d. Translate positive observations into PRESERVE markers.**
+For each positive observation, identify which spec constraints are responsible for the quality the author likes. Mark these as PRESERVE — they inform spec-auto-tune that these constraints are load-bearing and must not be removed in this iteration, even if other analysis parts suggest relaxing them.
+
+**5b-e. Surface conflicts between feedback and other parts.**
+When the author's feedback contradicts a recommendation from Parts 1-4 (for example, the author likes something that drift analysis flags as problematic, or the author values a constraint that saturation analysis recommends removing), explicitly note the conflict. The resolution is always: the author's preference takes precedence. The pipeline exists to serve the author. Document the conflict so the author can see and override if they change their mind in a future iteration.
+
 ### 6. Compose the Spec Coach report
 
-Combine the outputs from Steps 2, 3, 4, and 5 (when applicable) into a single plain-text document. Do NOT use markdown formatting (no #, *, `, or - for bullets). Use plain text with ALL-CAPS section anchors, numbered lists, and indentation for structure. Section separators must be exactly 70 `=` characters — not 80, not approximate. Google Docs wraps longer lines.
+Combine the outputs from Steps 2, 3, 4, 5, and 5b (when applicable) into a single plain-text document. Do NOT use markdown formatting (no #, *, `, or - for bullets). Use plain text with ALL-CAPS section anchors, numbered lists, and indentation for structure. Section separators must be exactly 70 `=` characters — not 80, not approximate. Google Docs wraps longer lines.
 
 The report opens with an EXECUTIVE SUMMARY so the reader sees every verdict at a glance before reading the detail. Within each part, state the verdict or composite score first, then present the supporting evidence.
 
@@ -276,6 +306,7 @@ Generated: <current date>
 Spec document: <spec_doc_url>
 Article document: <article_doc_url>
 [if no reference docs: Factual accuracy audit: skipped (no reference documents provided).]
+[if no Author Feedback tab: Author feedback analysis: skipped (no "Author Feedback" tab found in article document).]
 
 EXECUTIVE SUMMARY
 
@@ -284,6 +315,8 @@ EXECUTIVE SUMMARY
   Semantic Drift Risk:    <Low / Moderate / High>
   Factual Accuracy:       <CLEAN / MINOR ISSUES / CORRECTIONS NEEDED>
                           (or: Not audited — no reference documents provided)
+  Author Feedback:        <N> items (<P> positive, <C> change recommendations)
+                          (or: Not analyzed — no "Author Feedback" tab found)
 
   Top actions for this iteration:
     1. <highest-priority action drawn from Parts 1-4>
@@ -431,6 +464,43 @@ MINOR WORDING DIFFERENCES
   <List each difference briefly, or "None">
 
 ======================================================================
+PART 5: AUTHOR FEEDBACK ANALYSIS
+(omit this section if no "Author Feedback" tab was found)
+======================================================================
+
+FEEDBACK SOURCE: "Author Feedback" tab in article document
+Feedback items identified: <N>
+
+POSITIVE OBSERVATIONS (preserve in spec)
+
+  1. Author says: "<quoted feedback>"
+     Spec source: Tab <N> ("<tab name>") — <which instruction produces this>
+     Status: PRESERVE — do not remove or relax this constraint
+
+  2. ...
+
+SPEC CHANGE RECOMMENDATIONS (from negative observations)
+
+  1. <Recommendation title>
+     Author says: "<quoted feedback>"
+     Category: <TAB_CONTENT / TAB_REMOVAL / TAB_REORDER / INSTRUCTIONAL_ONLY / NEEDS_RESEARCH>
+     Target: Tab <N> ("<tab name>")
+     Change: <specific change to make>
+     Rationale: <how this addresses the author's concern>
+
+  2. ...
+
+CONFLICTS WITH OTHER PARTS
+
+  1. Author feedback vs. Part <N>:
+     Author says: "<quoted feedback>"
+     Part <N> recommends: <conflicting recommendation>
+     Resolution: Author preference takes precedence. <explanation>
+
+  2. ...
+  (or: "None — author feedback is consistent with all analytical findings.")
+
+======================================================================
 END OF REPORT
 ======================================================================
 ```
@@ -459,7 +529,7 @@ python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/write_tab.py <ARTICLE_ID>
 
 ## Key Notes
 
-- **Never write to the spec doc or reference docs** — gws-utils write scripts are only ever called with the article document ID
+- **Never write to the spec doc, reference docs, or the "Author Feedback" tab** — gws-utils write scripts are only ever called with the article document ID, and only to the "Spec Coach" tab
 - **Always validate IDs differ** before any API call — extract IDs from both URLs and compare
 - All gws API calls, keyring-line stripping, and JSON encoding are handled by the gws-utils scripts — do not call gws directly
 - Write the report text to `/tmp/spec_coach_report.txt` before calling `write_tab.py` — the script reads from a file to avoid shell quoting issues
@@ -467,3 +537,5 @@ python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/write_tab.py <ARTICLE_ID>
 - The scoring rubric must come from the spec itself whenever the spec defines one; only infer a rubric as a fallback
 - If `read_doc.py` returns no tab output, verify the doc ID is correct
 - The "Spec Coach" tab name is fixed and not user-configurable
+- The "Author Feedback" tab name is fixed — it is discovered by name in the article doc, not configured via YAML
+- When the "Author Feedback" tab is absent or empty, Part 5 is skipped entirely — this is not an error condition

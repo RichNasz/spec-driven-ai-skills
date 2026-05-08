@@ -162,3 +162,97 @@ Ensure the Standard Article Doc has a "Generated Article" tab with content befor
 - Open the "Spec Coach" tab. Confirm COMPOSITE SCORE is the first content line of PART 2.
 - Read the SCORING RUBRIC section and confirm a note about inference is present.
 - Confirm COMPOSITE SCORE line is present (skill completed scoring despite the absent rubric).
+
+---
+
+## C8 — Happy Path with Author Feedback (No Reference Docs)
+
+**Setup:** Standard Spec Doc. Standard Article Doc with a "Generated Article" tab containing an article (run G2 first if needed). Create an "Author Feedback" tab in the Standard Article Doc containing freeform feedback such as: "I liked the conversational tone and the opening hook. The middle section dragged — too many bullet points. The security section used too much jargon." `specs/fixtures/config-standard.yaml` (no `reference_docs`).
+
+**Invocation:**
+```
+/spec-coach specs/fixtures/config-standard.yaml
+```
+
+**Expected outcome:**
+- "Spec Coach" tab is created with Parts 1, 2, 3, and 5.
+- Part 4 is absent; the report header notes "Factual accuracy audit: skipped (no reference documents provided)."
+- Part 5 header reads "PART 5: AUTHOR FEEDBACK ANALYSIS".
+- FEEDBACK SOURCE line references "Author Feedback" tab.
+- POSITIVE OBSERVATIONS section contains at least one entry with a PRESERVE marker.
+- SPEC CHANGE RECOMMENDATIONS section contains at least one entry with a target spec tab, category, and change.
+- EXECUTIVE SUMMARY includes an "Author Feedback" line showing the item count.
+- Standard Spec Doc is unchanged.
+- "Author Feedback" tab content is unchanged.
+
+**Verification:**
+- Apply Spec Coach Report Structure Checklist (no reference docs, with feedback variant).
+- Confirm Part 5 is present between Part 3 and END OF REPORT.
+- Confirm POSITIVE OBSERVATIONS entries reference specific spec tabs and include PRESERVE status.
+- Confirm SPEC CHANGE RECOMMENDATIONS entries include Author says, Category, Target, Change, and Rationale fields.
+- Apply Write-Target Fidelity Checklist (spec-coach).
+
+---
+
+## C9 — Happy Path with Author Feedback AND Reference Docs
+
+**Setup:** Standard Spec Doc. Standard Article Doc with a "Generated Article" tab, an "Author Feedback" tab with feedback (same content as C8 or similar). `specs/fixtures/config-with-refs.yaml` (includes reference docs).
+
+**Invocation:**
+```
+/spec-coach specs/fixtures/config-with-refs.yaml
+```
+
+**Expected outcome:**
+- "Spec Coach" tab created with all five PARTS (1 through 5).
+- EXECUTIVE SUMMARY shows all five verdict lines.
+- Parts 1-4 are present and well-formed.
+- Part 5 is present with feedback analysis.
+- Reference Doc and "Author Feedback" tab are unchanged.
+
+**Verification:**
+- Apply Spec Coach Report Structure Checklist (with reference docs, with feedback variant).
+- Confirm all five PART headers are present in order.
+- Apply Write-Target Fidelity Checklist (spec-coach, including reference doc).
+
+---
+
+## C10 — Empty Author Feedback Tab
+
+**Setup:** Standard Spec Doc. Standard Article Doc with a "Generated Article" tab. Create an "Author Feedback" tab in the Standard Article Doc that is empty (no text content). `specs/fixtures/config-standard.yaml`.
+
+**Invocation:**
+```
+/spec-coach specs/fixtures/config-standard.yaml
+```
+
+**Expected outcome:**
+- Behavior is identical to C2 — Part 5 is omitted.
+- Report header contains "Author feedback analysis: skipped (no 'Author Feedback' tab found in article document)."
+- No PART 5 section is present.
+
+**Verification:**
+- Apply Spec Coach Report Structure Checklist (no reference docs, no feedback variant).
+- Confirm no PART 5 section is present.
+
+---
+
+## C11 — Author Feedback Conflicts with Part 2 Recommendation
+
+**Setup:** Standard Spec Doc. Standard Article Doc with a "Generated Article" tab. Create an "Author Feedback" tab with feedback that explicitly praises an aspect of the article that Part 2 is likely to recommend changing (e.g., "I love how every topic gets its own dedicated paragraph — don't reduce this" when Part 2 is likely to recommend downgrading dedicated paragraphs to substantive mentions). `specs/fixtures/config-standard.yaml`.
+
+**Invocation:**
+```
+/spec-coach specs/fixtures/config-standard.yaml
+```
+
+**Expected outcome:**
+- Part 5 CONFLICTS WITH OTHER PARTS section is non-empty.
+- At least one conflict entry shows the author's feedback versus the Part 2 recommendation.
+- The resolution states that the author's preference takes precedence.
+- The POSITIVE OBSERVATIONS section includes a PRESERVE marker for the constraint the author values.
+
+**Verification:**
+- Open the "Spec Coach" tab. Read the CONFLICTS WITH OTHER PARTS section in Part 5.
+- Confirm at least one entry references "Part 2" and quotes the author's feedback.
+- Confirm the resolution favors the author's stated preference.

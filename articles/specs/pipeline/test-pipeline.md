@@ -48,7 +48,7 @@ After Step 1:
 - Standard Spec Doc is unchanged.
 
 After Step 2:
-- "Spec Coach" tab exists in Standard Article Doc with a four-part report (reference docs provided).
+- "Spec Coach" tab exists in Standard Article Doc with a four-part report (reference docs provided; no Author Feedback tab).
 - The seeded inaccuracy appears in PART 4 as an INACCURACY with TAB_CORRECTION source.
 - Standard Spec Doc is unchanged.
 - Reference Doc is unchanged.

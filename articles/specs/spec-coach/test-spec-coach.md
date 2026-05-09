@@ -44,6 +44,7 @@ Ensure the Standard Article Doc has a "Generated Article" tab with content befor
 **Expected outcome:**
 - "Spec Coach" tab is created in the Standard Article Doc.
 - Report opens with EXECUTIVE SUMMARY showing all three verdicts (Constraint Saturation, Spec Quality Score, Semantic Drift Risk) and "Not audited" for Factual Accuracy, followed by Top actions list.
+- SCORE HISTORY section appears between the EXECUTIVE SUMMARY and PART 1, containing one entry (current date and composite score, no delta on first run).
 - PART 1 opens with SATURATION VERDICT before the detail sections.
 - PART 2 opens with COMPOSITE SCORE before SCORING RUBRIC.
 - PART 3 opens with COMPOSITE DRIFT ASSESSMENT before the four mechanism analyses.
@@ -68,6 +69,7 @@ Ensure the Standard Article Doc has a "Generated Article" tab with content befor
 **Expected outcome:**
 - "Spec Coach" tab created with all four PARTS.
 - EXECUTIVE SUMMARY shows all four verdicts including a Factual Accuracy verdict.
+- SCORE HISTORY section appears between the EXECUTIVE SUMMARY and PART 1.
 - PART 4 opens with ACCURACY VERDICT and inline claim counts before any detail.
 - PART 4 includes "REFERENCE DOCUMENTS USED" and "INACCURACIES".
 - The seeded inaccuracy (spec says "generally available", reference doc says "in preview") appears in PART 4 under INACCURACIES.
@@ -111,6 +113,7 @@ Ensure the Standard Article Doc has a "Generated Article" tab with content befor
 ```
 
 **Expected outcome:**
+- SCORE HISTORY section appears between the EXECUTIVE SUMMARY and PART 1.
 - SATURATION VERDICT is the first line of PART 1 and reads "OVER-DETERMINED".
 - The saturation explanation (immediately after SATURATION VERDICT) contains language about declining scores.
 - WORD BUDGET section shows utilization above 100%.
@@ -177,6 +180,7 @@ Ensure the Standard Article Doc has a "Generated Article" tab with content befor
 **Expected outcome:**
 - "Spec Coach" tab is created with Parts 1, 2, 3, and 5.
 - Part 4 is absent; the report header notes "Factual accuracy audit: skipped (no reference documents provided)."
+- SCORE HISTORY section appears between the EXECUTIVE SUMMARY and PART 1.
 - Part 5 header reads "PART 5: AUTHOR FEEDBACK ANALYSIS".
 - FEEDBACK SOURCE line references "Author Feedback" tab.
 - POSITIVE OBSERVATIONS section contains at least one entry with a PRESERVE marker.
@@ -206,6 +210,7 @@ Ensure the Standard Article Doc has a "Generated Article" tab with content befor
 **Expected outcome:**
 - "Spec Coach" tab created with all five PARTS (1 through 5).
 - EXECUTIVE SUMMARY shows all five verdict lines.
+- SCORE HISTORY section appears between the EXECUTIVE SUMMARY and PART 1.
 - Parts 1-4 are present and well-formed.
 - Part 5 is present with feedback analysis.
 - Reference Doc and "Author Feedback" tab are unchanged.
@@ -256,3 +261,52 @@ Ensure the Standard Article Doc has a "Generated Article" tab with content befor
 - Open the "Spec Coach" tab. Read the CONFLICTS WITH OTHER PARTS section in Part 5.
 - Confirm at least one entry references "Part 2" and quotes the author's feedback.
 - Confirm the resolution favors the author's stated preference.
+
+---
+
+## C12 — Score History on First Run
+
+**Setup:** Standard Spec Doc. Standard Article Doc with a "Generated Article" tab (run G2 first if needed). No existing "Spec Coach" tab in the article doc. `specs/fixtures/config-standard.yaml`.
+
+**Invocation:**
+```
+/spec-coach specs/fixtures/config-standard.yaml
+```
+
+**Expected outcome:**
+- "Spec Coach" tab is created with a SCORE HISTORY section between the EXECUTIVE SUMMARY and PART 1.
+- SCORE HISTORY contains exactly one entry: the current date and the composite score.
+- The entry has no delta suffix (first run).
+- The EXECUTIVE SUMMARY Spec Quality Score line has no delta text.
+
+**Verification:**
+- Open the "Spec Coach" tab. Locate the SCORE HISTORY section.
+- Confirm it contains exactly one date/score line.
+- Confirm no delta (no parenthetical +/- value) appears on the entry.
+- Confirm the score matches the COMPOSITE SCORE in PART 2.
+
+---
+
+## C13 — Score History on Re-Run
+
+**Setup:** Standard Spec Doc. Standard Article Doc with a "Generated Article" tab and an existing "Spec Coach" tab from a prior C12 or C2 run (the tab contains a report with a SCORE HISTORY section). `specs/fixtures/config-standard.yaml`.
+
+**Invocation:**
+```
+/spec-coach specs/fixtures/config-standard.yaml
+```
+
+**Expected outcome:**
+- The "Spec Coach" tab is overwritten with a new report.
+- SCORE HISTORY contains two entries: the prior run's entry (carried forward unchanged) and the current run's entry.
+- The current entry includes a delta from the prior score (e.g., `(+0.3)` or `(-0.5)`).
+- The EXECUTIVE SUMMARY Spec Quality Score line includes the same delta.
+- Prior history entries are preserved exactly as they appeared in the previous report.
+
+**Verification:**
+- Open the "Spec Coach" tab. Locate the SCORE HISTORY section.
+- Confirm it contains two date/score lines.
+- Confirm the first line matches the prior run's date and score (unchanged).
+- Confirm the second line shows the current date, current score, and a delta value.
+- Confirm the delta sign is correct (positive if score improved, negative if it dropped).
+- Confirm the EXECUTIVE SUMMARY Spec Quality Score line includes the delta.

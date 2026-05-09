@@ -58,6 +58,10 @@ Each skill has exactly one permitted write target:
 
 Users can provide feedback on a generated article by creating an "Author Feedback" tab in the article doc. Spec-coach reads this tab (when present) and translates the author's freeform reactions into Part 5 of the Spec Coach report — concrete spec recommendations and PRESERVE markers. The tab name is fixed and discovered by name, not configured via YAML. When absent, Part 5 is skipped.
 
+## Score History
+
+Spec-coach tracks the composite quality score across runs. On each run, it reads the prior "Spec Coach" tab (if it exists), extracts the SCORE HISTORY block, and carries forward all prior entries. The new report includes a SCORE HISTORY section between the EXECUTIVE SUMMARY and PART 1, with the current run's score and delta from the previous run.
+
 ## Test scripts
 
 Persistent shell scripts for running test scenarios live in `tests/`. Each scenario has a `setup-<ID>.sh` and (where applicable) a `verify-<ID>.sh`. A shared `tests/lib.sh` provides fixture management and assert helpers.

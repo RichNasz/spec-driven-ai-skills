@@ -97,15 +97,18 @@ Stop and report the error if IDs match. Never proceed to Step 1 until this passe
 
 ### 1. Read all documents in parallel
 
-Issue the spec, article, and author feedback reads **simultaneously in a single turn** (three bash calls at once — do not wait for one before starting the others):
+Issue the spec, article, author feedback, and prior Spec Coach reads **simultaneously in a single turn** (four bash calls at once — do not wait for one before starting the others):
 
 ```bash
 python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <SPEC_ID>
 python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <ARTICLE_ID> --tab "<DEST_TAB_NAME>"
 python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <ARTICLE_ID> --tab "Author Feedback"
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <ARTICLE_ID> --tab "Spec Coach"
 ```
 
 Save all outputs. You need every spec tab for scoring and drift analysis. For the article, `--tab <DEST_TAB_NAME>` (resolved from `dest_tab_name` in the YAML config, defaulting to `"Generated Article"`) returns only the tab needed for analysis, avoiding a full doc read. For author feedback, if the `--tab "Author Feedback"` read returns no output (tab does not exist or is empty), record that no author feedback was provided. Do not fail — Part 5 will be skipped.
+
+**Extract prior score history:** If the `--tab "Spec Coach"` read returned content, look for a `SCORE HISTORY` section. Extract all indented date/score lines between the `SCORE HISTORY` header and the next blank line or section header. Each line has the format `<date>   <score>/<max>` with an optional delta suffix. Save these lines as the prior score history. If the tab does not exist, is empty, or has no SCORE HISTORY section, record that no prior history exists.
 
 **If `--tab <DEST_TAB_NAME>` returns no tab block** (output is empty or contains only a warning), the article doc uses a different tab name. Fall back by issuing a full read without `--tab`:
 ```bash
@@ -187,6 +190,9 @@ CONFLICTS:
 
 Frame this as "what would a spec need to consistently produce output that exceeds the maximum score" — not just hitting the ceiling but breaking through it. A spec that asks for fewer things with more room to execute will consistently outperform a spec that asks for everything precisely.
 
+**3d. Compute score delta.**
+If prior score history exists (extracted in Step 1), compare the composite score from 3b against the most recent entry in the history. Record the delta (positive or negative) for use in the EXECUTIVE SUMMARY and SCORE HISTORY sections of the report.
+
 ### 4. Semantic Drift Analysis
 
 This step produces PART 3 of the Spec Coach report. Analyze the tab chain for evidence that sequential processing caused the final article to drift from what the full set of instructions intended.
@@ -229,7 +235,7 @@ This step produces PART 4 of the Spec Coach report. Skip this step entirely if n
 
 Reference documents are treated as the guaranteed source of truth. Every verifiable factual claim in the article must be checked against them.
 
-**5a. Extract factual claims from the article.**
+**5.1. Extract factual claims from the article.**
 Identify every verifiable claim in the article. Focus on:
 - Technology names and product names
 - GA / preview / planned / in-development statuses and version numbers
@@ -241,14 +247,14 @@ Identify every verifiable claim in the article. Focus on:
 
 Do NOT flag narrative devices (the 6 AM incident scenario), editorial interpretations (consequences the reader should care about), or plain-English explanations of technical terms — these are article-writing choices, not factual claims.
 
-**5b. Cross-reference each claim against the reference documents.**
+**5.2. Cross-reference each claim against the reference documents.**
 For each factual claim, search the reference documents for supporting evidence. Categorize:
 - VERIFIED: Claim is directly supported by reference docs (exact match or clear paraphrase)
 - INACCURACY: Claim contradicts reference docs (wrong status, wrong version, wrong capability, wrong tense — e.g., "supports" when reference says "planned")
 - UNSUPPORTED: Claim makes a specific factual assertion not found in any reference doc (potential hallucination — the claim may be true but cannot be verified from the provided sources)
 - MINOR: Claim uses slightly different wording than reference docs but the substance is accurate (e.g., "proxy" vs "reverse proxy" for the same component)
 
-**5c. Trace hallucination sources.**
+**5.3. Trace hallucination sources.**
 For each INACCURACY or UNSUPPORTED finding, determine where the claim originated:
 - SPEC: The spec instructed the model to include this claim (cite the tab and text)
 - MODEL: The model generated this claim without support from spec or reference docs
@@ -256,43 +262,43 @@ For each INACCURACY or UNSUPPORTED finding, determine where the claim originated
 
 This source tracing is critical for spec-auto-tune: if the spec caused the hallucination, the spec needs correction. If the model hallucinated, the spec may need a constraint to prevent it.
 
-**5d. Generate correction recommendations.**
+**5.4. Generate correction recommendations.**
 For each INACCURACY or high-risk UNSUPPORTED finding, provide:
 - The exact text in the article that should change
 - What it should say instead, based on reference docs
 - Whether the spec needs a correction (if the spec caused the issue, name the tab and the specific text to change)
 
-### 5b. Author Feedback Analysis (requires "Author Feedback" tab)
+### 6. Author Feedback Analysis (requires "Author Feedback" tab)
 
 This step produces PART 5 of the Spec Coach report. Skip this step entirely if no "Author Feedback" tab was found in the article doc (the Step 1 read returned no output). When skipped, note in the report header: "Author feedback analysis: skipped (no 'Author Feedback' tab found in article document)."
 
 The "Author Feedback" tab contains the author's freeform reactions to the generated article. This step translates those subjective reactions into concrete spec recommendations and preservation markers.
 
-**5b-a. Parse feedback into discrete observations.**
+**6a. Parse feedback into discrete observations.**
 Break the freeform text into individual feedback items. Each item is a distinct reaction, preference, or observation the author expressed. Preserve the author's language in quotes when referencing their feedback.
 
-**5b-b. Classify each observation.**
+**6b. Classify each observation.**
 For each feedback item, determine:
 - Whether it is **positive** (something the author likes that should be preserved in the spec) or **negative** (something the author dislikes that should be changed in the spec)
 - Which spec tab(s) most likely control the aspect of the article the author is reacting to
 - Whether the feedback is about content, structure, tone, pacing, depth, or coverage
 
-**5b-c. Translate negative observations into spec recommendations.**
+**6c. Translate negative observations into spec recommendations.**
 For each negative observation, produce a concrete recommendation using the same category system as Parts 1-4. Each recommendation must:
 - Name the specific spec tab to modify
 - Specify the change type: TAB_CONTENT, TAB_REMOVAL, TAB_REORDER, INSTRUCTIONAL_ONLY, or NEEDS_RESEARCH
 - Explain the specific change to make
 - Explain how the change addresses the author's concern
 
-**5b-d. Translate positive observations into PRESERVE markers.**
+**6d. Translate positive observations into PRESERVE markers.**
 For each positive observation, identify which spec constraints are responsible for the quality the author likes. Mark these as PRESERVE — they inform spec-auto-tune that these constraints are load-bearing and must not be removed in this iteration, even if other analysis parts suggest relaxing them.
 
-**5b-e. Surface conflicts between feedback and other parts.**
+**6e. Surface conflicts between feedback and other parts.**
 When the author's feedback contradicts a recommendation from Parts 1-4 (for example, the author likes something that drift analysis flags as problematic, or the author values a constraint that saturation analysis recommends removing), explicitly note the conflict. The resolution is always: the author's preference takes precedence. The pipeline exists to serve the author. Document the conflict so the author can see and override if they change their mind in a future iteration.
 
-### 6. Compose the Spec Coach report
+### 7. Compose the Spec Coach report
 
-Combine the outputs from Steps 2, 3, 4, 5, and 5b (when applicable) into a single plain-text document. Do NOT use markdown formatting (no #, *, `, or - for bullets). Use plain text with ALL-CAPS section anchors, numbered lists, and indentation for structure. Section separators must be exactly 70 `=` characters — not 80, not approximate. Google Docs wraps longer lines.
+Combine the outputs from Steps 2, 3, 4, 5, and 6 (when applicable) into a single plain-text document. Do NOT use markdown formatting (no #, *, `, or - for bullets). Use plain text with ALL-CAPS section anchors, numbered lists, and indentation for structure. Section separators must be exactly 70 `=` characters — not 80, not approximate. Google Docs wraps longer lines.
 
 The report opens with an EXECUTIVE SUMMARY so the reader sees every verdict at a glance before reading the detail. Within each part, state the verdict or composite score first, then present the supporting evidence.
 
@@ -311,7 +317,7 @@ Article document: <article_doc_url>
 EXECUTIVE SUMMARY
 
   Constraint Saturation:  <HEALTHY / TIGHT / OVER-DETERMINED>
-  Spec Quality Score:     <weighted score>/<max>
+  Spec Quality Score:     <weighted score>/<max> (<delta> from prior run, if prior history exists)
   Semantic Drift Risk:    <Low / Moderate / High>
   Factual Accuracy:       <CLEAN / MINOR ISSUES / CORRECTIONS NEEDED>
                           (or: Not audited — no reference documents provided)
@@ -322,6 +328,11 @@ EXECUTIVE SUMMARY
     1. <highest-priority action drawn from Parts 1-4>
     2. <second action>
     3. <third action>
+
+SCORE HISTORY
+
+  <prior history entries carried forward, one per line, unchanged>
+  <current date>   <score>/<max>   (<+/-delta> from prior run, omit if first run)
 
 ======================================================================
 PART 1: CONSTRAINT SATURATION ANALYSIS
@@ -507,7 +518,7 @@ END OF REPORT
 
 Write the complete report text to `/tmp/spec_coach_report.txt`.
 
-### 7. Find or create the "Spec Coach" tab
+### 8. Find or create the "Spec Coach" tab
 
 **Find the tab or create it:**
 ```bash
@@ -521,7 +532,7 @@ fi
 ```
 `find_tab.py` exits 0 with `tabId|endIndex` if found, exits 1 if not found. `clear_tab.py` silently skips if endIndex ≤ 2. `create_tab.py` prints the new tabId.
 
-### 8. Write the report to the "Spec Coach" tab
+### 9. Write the report to the "Spec Coach" tab
 
 ```bash
 python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/write_tab.py <ARTICLE_ID> "$TAB_ID" /tmp/spec_coach_report.txt

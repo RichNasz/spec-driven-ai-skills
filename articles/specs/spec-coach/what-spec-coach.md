@@ -32,3 +32,4 @@ As a spec author, I want a structured evaluation of my spec's performance after 
 - The "Author Feedback" tab is unchanged after the skill runs.
 - If spec and article doc IDs are identical, the skill stops before making any changes and reports the conflict.
 - Scoring uses the rubric defined in the spec itself; an inferred rubric is noted explicitly.
+- The report includes a SCORE HISTORY section that tracks the composite quality score across runs. On re-runs, the history carries forward prior scores and shows the delta from the previous run.

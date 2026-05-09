@@ -46,7 +46,7 @@ When no "Author Feedback" tab exists in the article doc (or the tab is empty), P
 
 ## What you get
 
-A "Spec Coach" tab is created in the article doc (or overwritten if it already exists) containing a plain-text report with up to five parts:
+A "Spec Coach" tab is created in the article doc (or overwritten if it already exists) containing a plain-text report. The report opens with an EXECUTIVE SUMMARY, followed by a SCORE HISTORY section that tracks the composite quality score across runs. On re-runs, prior scores are carried forward and the current entry shows the delta from the previous run (e.g., `+0.3` or `-0.5`). After SCORE HISTORY, the report contains up to five parts:
 
 **Part 1 — Constraint Saturation Analysis**
 Determines whether the spec's requirements are achievable within the target word count. Assigns a verdict of HEALTHY, TIGHT, or OVER-DETERMINED. See [concepts.md](../../docs/concepts.md#constraint-saturation) for a full explanation of the saturation model and what each verdict means for iteration.
@@ -104,4 +104,4 @@ The skill reads both docs and the reference doc, runs all applicable analysis pa
 
 - If the spec has no explicit scoring rubric, the skill constructs one from the spec's own stated goals and notes that the rubric was inferred.
 - The report uses plain text with ALL-CAPS headers and no markdown characters — this is intentional so the report reads correctly inside Google Docs.
-- Running the skill twice on the same unmodified docs produces a fresh report each time (overwrites the previous one).
+- Running the skill twice on the same unmodified docs produces a fresh report each time (overwrites the previous one). The composite quality score from each run is preserved in the SCORE HISTORY section, so you can track improvement across iterations.

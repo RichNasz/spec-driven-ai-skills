@@ -24,15 +24,16 @@ Evaluates the quality of a generated article relative to the multi-tab spec that
 - `spec_doc_url` — Google Doc URL containing the spec tabs (the same source doc used by generate-article)
 - `article_doc_url` — Google Doc URL containing the generated article
 
-**YAML form:** Pass the path to a YAML config file instead of positional URLs. The file must contain:
+**YAML form:** Pass the path to a YAML config file instead of positional URLs. Pass the same file to all three skills to run the full flywheel.
 ```yaml
-spec_doc_url: "https://docs.google.com/document/d/<SPEC_ID>/edit"
+spec_doc_url:    "https://docs.google.com/document/d/<SPEC_ID>/edit"
 article_doc_url: "https://docs.google.com/document/d/<ARTICLE_ID>/edit"
-reference_docs:              # optional — enables factual accuracy audit (Step 5)
+dest_tab_name:   "Generated Article"  # optional — tab name to read article from; defaults to "Generated Article"
+reference_docs:                        # optional — enables factual accuracy audit (Part 4)
   - url: "https://docs.google.com/document/d/<DOC_ID>/edit"
     description: "Short description of what this doc covers"
 ```
-`reference_docs` is optional. When present, the skill performs a factual accuracy audit (Step 5) that cross-references article claims against these source-of-truth documents. When absent, Step 5 is skipped and Part 4 is omitted from the report.
+`dest_tab_name` is optional. `reference_docs` is optional — when present, the skill performs a factual accuracy audit (Part 4) that cross-references article claims against these source-of-truth documents; when absent, Part 4 is omitted. See `config.example.yaml` in the plugin root for the full annotated template.
 
 Extract the document ID from a URL like `https://docs.google.com/document/d/<DOC_ID>/edit`.
 

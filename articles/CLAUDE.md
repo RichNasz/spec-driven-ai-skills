@@ -15,7 +15,7 @@ Skills live in `skills/<name>/SKILL.md` and are invoked as slash commands.
 | `/articles:spec-auto-tune` | `skills/spec-auto-tune/SKILL.md` | |
 | (not invoked directly) | `skills/gws-utils/SKILL.md` | Shared gws utility scripts |
 
-An example YAML config is at `skills/spec-auto-tune/config.example.yaml`.
+A shared example YAML config for the full flywheel is at `config.example.yaml`.
 
 ## gws-utils shared dependency
 

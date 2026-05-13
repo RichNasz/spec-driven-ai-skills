@@ -126,9 +126,9 @@ Reset the Standard Article Doc to an empty state per the reset protocol in `how-
 
 ---
 
-## G7 — Unknown YAML Keys Ignored
+## G7 — Happy Path with Reference Docs
 
-**Setup:** Standard Spec Doc. Standard Article Doc (reset). `specs/fixtures/config-with-refs.yaml` — this config contains `reference_docs` and `dest_tab_name` in addition to the required keys.
+**Setup:** Standard Spec Doc (5 tabs). Standard Article Doc (reset). `specs/fixtures/config-with-refs.yaml` — includes `reference_docs` pointing to the Reference Doc fixture.
 
 **Invocation:**
 ```
@@ -136,10 +136,13 @@ Reset the Standard Article Doc to an empty state per the reset protocol in `how-
 ```
 
 **Expected outcome:**
+- Skill reads the Reference Doc fixture (one `read_doc.py` call per reference doc, issued in parallel after the spec read).
 - Skill completes without error.
-- Tab is created using the `dest_tab_name` value from the YAML.
-- No error about unrecognized keys (`reference_docs`) is emitted.
+- Tab is created using the `dest_tab_name` value from the YAML and contains a non-empty article.
+- The Reference Doc is not modified.
 
 **Verification:**
-- Open Standard Article Doc — confirm the tab exists with the correct name from `dest_tab_name`.
-- Confirm no error message about unknown keys appeared in the conversation.
+- Confirm `read_doc.py` was called for each URL in `reference_docs` (visible in the conversation as parallel Bash calls after the spec read).
+- Open Standard Article Doc — confirm the tab exists with the correct name from `dest_tab_name` and has content.
+- Apply Write-Target Fidelity Checklist (generate-article).
+- Open the Reference Doc fixture — confirm it is unchanged.

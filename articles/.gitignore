@@ -9,9 +9,10 @@
 
 # Personal config files — contain private Google Doc URLs
 # Users create these at the project root (e.g. my-article.yaml).
-# The config.example.yaml templates in skills/ are committed.
+# The shared config.example.yaml template at the articles root is committed.
 /*.yaml
 /*.yml
+!/config.example.yaml
 
 # Test fixture configs — contain real Google Doc URLs
 # Copy specs/fixtures/fixtures.yaml.example → fixtures.yaml and fill in your own doc IDs.

@@ -23,17 +23,20 @@ Reads the "Spec Coach" tab in the article document, analyzes its recommendations
 
 ### Config YAML Format
 
+Pass the same file to all three skills to run the full flywheel.
+
 ```yaml
-spec_doc_url: "https://docs.google.com/document/d/<SPEC_ID>/edit"
+spec_doc_url:    "https://docs.google.com/document/d/<SPEC_ID>/edit"
 article_doc_url: "https://docs.google.com/document/d/<ARTICLE_ID>/edit"
-reference_docs:
+dest_tab_name:   "Generated Article"  # ignored by this skill
+reference_docs:                        # optional — enables research-backed spec improvements
   - url: "https://docs.google.com/document/d/<REF_ID>/edit"
     description: "Red Hat Agentic AI FAQ — factual grounding for Red Hat product capabilities"
   - url: "https://docs.google.com/document/d/<REF2_ID>/edit"
     description: "Another reference document and what it contains"
 ```
 
-`reference_docs` is optional. Omit the key or leave it empty if no research grounding is needed.
+`dest_tab_name` is ignored by this skill. `reference_docs` is optional — omit the key or leave it empty if no research grounding is needed. See `config.example.yaml` in the plugin root for the full annotated template.
 
 ## Hard Constraints (enforce before doing anything else)
 

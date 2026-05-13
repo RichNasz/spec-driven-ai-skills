@@ -29,6 +29,9 @@ Reads a multi-tab Google Doc spec and writes a generated article to a destinatio
 spec_doc_url:    "https://docs.google.com/document/d/<SPEC_ID>/edit"   # required
 article_doc_url: "https://docs.google.com/document/d/<ARTICLE_ID>/edit" # required
 dest_tab_name:   "Generated Article"                                     # optional
+reference_docs:                                                          # optional
+  - url: "https://docs.google.com/document/d/<REF_ID>/edit"
+    description: "Style guide, editorial checklist, or author outline"
 ```
 
 | Field | Required | Default | Description |
@@ -36,8 +39,7 @@ dest_tab_name:   "Generated Article"                                     # optio
 | `spec_doc_url` | Yes | — | Google Doc containing the spec tabs |
 | `article_doc_url` | Yes | — | Google Doc to write the article into |
 | `dest_tab_name` | No | `Generated Article` | Tab name to create or overwrite in the article doc |
-
-Any extra keys in the YAML (e.g., `reference_docs`) are silently ignored.
+| `reference_docs` | No | — | Reference documents read as supplementary context during generation (style guides, editorial checklists, author outlines). Each entry requires `url` and `description`. |
 
 ## What you get
 

@@ -12,10 +12,11 @@ As a content creator, I want to point the skill at a spec doc and a destination 
 
 1. Accept a spec doc URL and a destination doc URL, either as positional arguments or from a YAML config file.
 2. Read all tabs from the spec doc in index order.
-3. Apply the tabs sequentially as a prompt chain, where each tab refines the output of the previous one.
-4. Write the generated article to a named tab in the destination doc. Create the tab if it does not exist; overwrite it if it does.
-5. Never modify the spec doc.
-6. Default the destination tab name to "Generated Article" when not specified.
+3. When `reference_docs` are provided in the YAML config, read them in parallel after the spec and use their content as supplementary context during article generation. Reference documents are read-only.
+4. Apply the spec tabs sequentially as a prompt chain, where each tab refines the output of the previous one.
+5. Write the generated article to a named tab in the destination doc. Create the tab if it does not exist; overwrite it if it does.
+6. Never modify the spec doc or any reference document.
+7. Default the destination tab name to "Generated Article" when not specified.
 
 ## Success Criteria
 

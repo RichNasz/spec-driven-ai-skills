@@ -25,13 +25,16 @@ Reads a multi-tab Google Doc where each tab is a sequential refinement prompt. A
 - `dest_doc_url` — Google Doc URL to write the generated article into
 - `dest_tab_name` — Name of the tab to write into (default: `Generated Article`). Created if it doesn't exist.
 
-**YAML form:** Pass the path to a YAML config file instead of positional URLs. The file must contain:
+**YAML form:** Pass the path to a YAML config file instead of positional URLs. Pass the same file to all three skills to run the full flywheel.
 ```yaml
-spec_doc_url: "https://docs.google.com/document/d/<SPEC_ID>/edit"
+spec_doc_url:    "https://docs.google.com/document/d/<SPEC_ID>/edit"
 article_doc_url: "https://docs.google.com/document/d/<ARTICLE_ID>/edit"
-dest_tab_name: "Generated Article"  # optional, defaults to "Generated Article"
+dest_tab_name:   "Generated Article"  # optional, defaults to "Generated Article"
+reference_docs:                        # optional — read as additional context during generation
+  - url: "..."
+    description: "..."
 ```
-`dest_tab_name` is optional in the YAML. Any other keys (e.g., `reference_docs`) are ignored by this skill.
+`dest_tab_name` is optional. `reference_docs` is optional — when present, the skill reads them as supplementary context (style guides, editorial checklists, author outlines) to inform article generation. See `config.example.yaml` in the plugin root for the full annotated template.
 
 Extract the document ID from a URL like `https://docs.google.com/document/d/<DOC_ID>/edit`.
 
@@ -46,30 +49,46 @@ Extract the document ID from a URL like `https://docs.google.com/document/d/<DOC
 
 **Resolve URLs from args or YAML.** If the argument ends in `.yaml` or `.yml`, load it; otherwise use positional args:
 ```python
-import re, sys, os
+import re, os
 
 def doc_id(url):
     return re.search(r'/d/([a-zA-Z0-9_-]+)', url).group(1)
 
 arg = "<first_argument>"
 if arg.endswith(('.yaml', '.yml')):
-    config = {}
+    config = {'reference_docs': []}
+    current_ref = None
     with open(os.path.expanduser(arg)) as f:
         for line in f:
             s = line.strip()
-            if not s or s.startswith('#') or s.startswith('-') or ':' not in s:
+            if not s or s.startswith('#'):
                 continue
-            k, _, v = s.partition(':')
-            k, v = k.strip(), v.strip().strip('"').strip("'")
-            if v:
-                config[k] = v
+            if s.startswith('- '):
+                if current_ref is not None:
+                    config['reference_docs'].append(current_ref)
+                current_ref = {}
+                s = s[2:].strip()
+            elif not line[0:1].isspace() and current_ref is not None:
+                config['reference_docs'].append(current_ref)
+                current_ref = None
+            if ':' in s:
+                k, _, v = s.partition(':')
+                k, v = k.strip(), v.strip().strip('"').strip("'")
+                if current_ref is not None:
+                    current_ref[k] = v
+                elif v:
+                    config[k] = v
+    if current_ref is not None:
+        config['reference_docs'].append(current_ref)
     source_doc_url = config.get('spec_doc_url', '')
     dest_doc_url   = config.get('article_doc_url', '')
     dest_tab_name  = config.get('dest_tab_name', 'Generated Article')
+    reference_docs = config.get('reference_docs', [])  # list of {url, description}
 else:
     source_doc_url = arg          # first positional
     dest_doc_url   = "<second_argument>"
     dest_tab_name  = "<third_argument_or_default: Generated Article>"
+    reference_docs = []
 
 src = doc_id(source_doc_url)
 dst = doc_id(dest_doc_url)
@@ -82,6 +101,18 @@ Stop and report the error if IDs match. Never proceed to Step 1 until this passe
 ```bash
 python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <SOURCE_ID>
 ```
+
+### 1b. Read reference documents (if provided)
+
+If `reference_docs` is non-empty, issue **all reference doc reads simultaneously in a single turn**:
+```bash
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/gws-utils/scripts/read_doc.py <REF_DOC_1_ID>
+python3 ${CLAUDE_PLUGIN_PATH}/skills/gws-utils/scripts/read_doc.py <REF_DOC_2_ID>
+# one call per reference doc, all in the same turn
+```
+Save the full text of each. Use the `description` field from the YAML to understand each doc's purpose (e.g., style guide, editorial checklist, author outline). Reference documents are read-only — never call any write script against them.
+
+If `reference_docs` is empty, skip this step.
 
 ### 2. Generate the article
 

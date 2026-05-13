@@ -1,0 +1,26 @@
+# Article Skills Flywheel Configuration
+# Pass this file to any or all of the article skills:
+#   /articles:generate-article /path/to/config.yaml
+#   /articles:spec-coach       /path/to/config.yaml
+#   /articles:spec-auto-tune   /path/to/config.yaml
+
+# Required by all three skills
+spec_doc_url:    "https://docs.google.com/document/d/<SPEC_ID>/edit"
+article_doc_url: "https://docs.google.com/document/d/<ARTICLE_ID>/edit"
+
+# Optional: name of the tab where the article is written (generate-article)
+# and read from (spec-coach). Ignored by spec-auto-tune.
+# Defaults to "Generated Article" when omitted.
+dest_tab_name: "Generated Article"
+
+# Optional: reference documents.
+# generate-article reads them as supplementary context during generation (style guides,
+#   editorial checklists, author outlines).
+# spec-coach uses them for the Part 4 factual accuracy audit.
+# spec-auto-tune uses them to ground research-backed spec improvements.
+# Omit this section entirely if no reference documents are needed.
+reference_docs:
+  - url: "https://docs.google.com/document/d/<REF_DOC_ID>/edit"
+    description: "Description of what this document contains"
+  # - url: "https://docs.google.com/document/d/<ANOTHER_REF_ID>/edit"
+  #   description: "Another reference document"
